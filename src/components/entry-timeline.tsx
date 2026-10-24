@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCents, formatMonthDay } from '@/lib/format';
+import { shiftReason } from '@/lib/holidays/names';
 import type { Entry } from '@/lib/projection/types';
 
 export interface EntryTimelineProps {
@@ -34,8 +35,7 @@ function EntryRow({ entry, overdue }: { entry: Entry; overdue: boolean }) {
           {shifted ? (
             <span className="text-muted-foreground">
               {' '}
-              (shifted from <time dateTime={entry.postDate}>{formatMonthDay(entry.postDate)}</time>, weekend or
-              bank holiday)
+              (<time dateTime={entry.postDate}>{shiftReason(entry.postDate)}</time>)
             </span>
           ) : null}
         </p>

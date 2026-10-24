@@ -8,14 +8,9 @@ import { LowBalanceWarning } from '@/components/low-balance-warning';
 import { ResetDemoButton } from '@/components/reset-demo-button';
 import { RunwayCallout } from '@/components/runway-callout';
 import { buildCycleViewModel } from '@/lib/cycle-view-model';
+import { daysBetween } from '@/lib/projection/dates';
 import type { ProjectionOutput } from '@/lib/projection/types';
 
-const DAY_MS = 86_400_000;
-
-function dayNumber(date: string): number {
-  const [y, m, d] = date.split('-').map(Number);
-  return Math.round(Date.UTC(y, m - 1, d) / DAY_MS);
-}
 
 type State =
   | { kind: 'loading' }
@@ -44,7 +39,7 @@ export default function CyclePage() {
   }, [load]);
 
   return (
-    <main className="mx-auto max-w-3xl space-y-6 p-6">
+    <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
       <header className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">Runway</h1>
         <ResetDemoButton onReset={load} />
@@ -83,14 +78,21 @@ function Body({ state }: { state: State }) {
   const { runway } = projection;
   const warnings = projection.warnings ?? {};
   const horizonDays = runway
-    ? Math.max(0, dayNumber(runway.projectionEndDate) - dayNumber(balances[0].date))
+    ? Math.max(0, daysBetween(balances[0].date, runway.projectionEndDate))
     : balances.length;
+  const nextPayday = runway?.isBeforePayday ? projection.payCycles?.[1]?.startDate : undefined;
+  const daysUntilPayday = nextPayday ? daysBetween(balances[0].date, nextPayday) : null;
   const model = buildCycleViewModel(projection, horizonDays);
   const below = warnings.belowThreshold;
 
   return (
     <div className="space-y-6">
-      <RunwayCallout runway={runway} isEstimated={balances[0]?.isEstimated} horizonDays={horizonDays} />
+      <RunwayCallout
+        runway={runway}
+        isEstimated={balances[0]?.isEstimated}
+        horizonDays={horizonDays}
+        daysUntilPayday={daysUntilPayday}
+      />
       {below && (
         <LowBalanceWarning
           lowestBalanceCents={below.lowestBalanceCents}

@@ -7,6 +7,14 @@ export interface RunwayCalloutProps {
   isEstimated?: boolean;
   /** Projection horizon in days, used for the "within the next N days" label. */
   horizonDays: number;
+  /** Whole days until the next paycheck; set only when the runway is bounded by it. */
+  daysUntilPayday?: number | null;
+}
+
+/** "today", "1 day until payday", or "N days until payday". */
+export function paydayCountdown(days: number): string {
+  if (days <= 0) return 'Payday is today';
+  return days === 1 ? '1 day until payday' : `${days} days until payday`;
 }
 
 export function runwayLabel(isBeforePayday: boolean, horizonDays: number): string {
@@ -14,7 +22,7 @@ export function runwayLabel(isBeforePayday: boolean, horizonDays: number): strin
 }
 
 /** Hero runway number: lowest projected available balance and the date it occurs. */
-export function RunwayCallout({ runway, isEstimated = false, horizonDays }: RunwayCalloutProps) {
+export function RunwayCallout({ runway, isEstimated = false, horizonDays, daysUntilPayday = null }: RunwayCalloutProps) {
   if (!runway) {
     return (
       <section aria-labelledby="runway-heading" className="space-y-1">
@@ -45,6 +53,9 @@ export function RunwayCallout({ runway, isEstimated = false, horizonDays }: Runw
       <p className="text-base text-foreground">
         lowest on <time dateTime={runway.lowestBalanceDate}>{date}</time>, {label}
       </p>
+      {daysUntilPayday !== null && (
+        <p className="text-sm text-muted-foreground">{paydayCountdown(daysUntilPayday)}</p>
+      )}
     </section>
   );
 }

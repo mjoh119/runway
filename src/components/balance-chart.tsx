@@ -2,6 +2,7 @@
 
 import {
   CartesianGrid,
+  Legend,
   Line,
   LineChart,
   ReferenceDot,
@@ -11,6 +12,7 @@ import {
   YAxis,
 } from 'recharts';
 import type { ChartPoint, CycleBoundary } from '@/lib/cycle-view-model';
+import { niceTicksCents } from '@/lib/chart-ticks';
 import { formatCents, formatMonthDay, formatWholeDollars } from '@/lib/format';
 import type { RunwayResult } from '@/lib/projection/types';
 
@@ -21,7 +23,8 @@ export interface BalanceChartProps {
 }
 
 const AVAILABLE_COLOR = '#2563eb';
-const LEDGER_COLOR = '#64748b';
+const LEDGER_COLOR = '#f97316';
+const BOUNDARY_COLOR = '#64748b';
 const RUNWAY_COLOR = '#dc2626';
 
 /** Plain-text description of the chart for assistive tech (Requirements 13.1, 9.2). */
@@ -45,7 +48,7 @@ export function describeChart({ series, boundaries, runway }: BalanceChartProps)
   if (boundaries.length > 0) {
     parts.push(`Pay cycles start on ${boundaries.map((b) => formatMonthDay(b.date)).join(', ')}.`);
   }
-  parts.push('Ledger balance is shown as a lighter dashed line.');
+  parts.push('Ledger balance is shown as a dashed orange line.');
   return parts.join(' ');
 }
 
@@ -57,6 +60,8 @@ export function BalanceChart(props: BalanceChartProps) {
     return <p className="text-muted-foreground">{summary}</p>;
   }
 
+  const values = series.flatMap((p) => [p.availableCents, p.ledgerCents]);
+  const ticks = niceTicksCents(Math.min(...values), Math.max(...values));
   const runwayPoint = runway ? series.find((p) => p.date === runway.lowestBalanceDate) : undefined;
 
   return (
@@ -66,20 +71,21 @@ export function BalanceChart(props: BalanceChartProps) {
           <LineChart data={series} margin={{ top: 12, right: 16, bottom: 4, left: 8 }} accessibilityLayer={false}>
             <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
             <XAxis dataKey="date" tickFormatter={formatMonthDay} minTickGap={24} />
-            <YAxis tickFormatter={formatWholeDollars} width={64} />
+            <YAxis tickFormatter={formatWholeDollars} width={64} ticks={ticks} domain={[ticks[0], ticks[ticks.length - 1]]} />
+            <Legend verticalAlign="top" height={28} />
             <Line
-              type="monotone"
+              type="stepAfter"
               dataKey="ledgerCents"
               name="Ledger"
               stroke={LEDGER_COLOR}
-              strokeWidth={1}
-              strokeDasharray="4 4"
-              strokeOpacity={0.6}
+              strokeWidth={2}
+              strokeDasharray="6 4"
+              strokeOpacity={0.9}
               dot={false}
               isAnimationActive={false}
             />
             <Line
-              type="monotone"
+              type="stepAfter"
               dataKey="availableCents"
               name="Available"
               stroke={AVAILABLE_COLOR}
@@ -91,7 +97,7 @@ export function BalanceChart(props: BalanceChartProps) {
               <ReferenceLine
                 key={b.date}
                 x={b.date}
-                stroke={LEDGER_COLOR}
+                stroke={BOUNDARY_COLOR}
                 strokeDasharray="2 4"
                 label={{ value: 'Payday', position: 'insideTopRight', fontSize: 11 }}
               />

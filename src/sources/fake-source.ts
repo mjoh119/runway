@@ -63,7 +63,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
     schedules: [
       {
         id: 'schedule-paycheck',
-        name: 'Biweekly Paycheck',
+        name: 'Paycheck',
         accountId: 'demo-checking',
         intervalType: 'WEEKS',
         intervalValue: 2,
@@ -72,7 +72,41 @@ export function generateDemoData(currentDateStr: string): DemoData {
         estimatedAmountCents: 240_000, // $2,400
         entryType: 'INCOME',
       },
-    ],
+      // Second pay cycle bills: all fall after the next paycheck (offset +13 days),
+      // so they never change the runway before payday.
+      {
+        id: 'schedule-internet',
+        name: 'Internet',
+        accountId: 'demo-checking',
+        intervalType: 'DAYS',
+        intervalValue: 30,
+        daysOfMonth: [],
+        startDate: addDays(currentDateStr, 16),
+        estimatedAmountCents: -6_500,
+        entryType: 'DEBIT',
+      },
+      {
+        id: 'schedule-car-insurance',
+        name: 'Car insurance',
+        accountId: 'demo-checking',
+        intervalType: 'DAYS',
+        intervalValue: 30,
+        daysOfMonth: [],
+        startDate: addDays(currentDateStr, 19),
+        estimatedAmountCents: -11_500,
+        entryType: 'DEBIT',
+      },
+      {
+        id: 'schedule-streaming',
+        name: 'Streaming',
+        accountId: 'demo-checking',
+        intervalType: 'DAYS',
+        intervalValue: 30,
+        daysOfMonth: [],
+        startDate: addDays(currentDateStr, 21),
+        estimatedAmountCents: -1_599,
+        entryType: 'DEBIT',
+      },    ],
 
     // shiftedPostDate may equal postDate in the seed; the engine computes the real value
     oneOffEntries: [
@@ -86,7 +120,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         actualAmountCents: null,
         status: 'PLANNED',
         entryType: 'DEBIT',
-        description: 'Phone Bill (overdue)',
+        description: 'Phone bill',
       },
       {
         id: 'entry-rent',
@@ -110,7 +144,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         actualAmountCents: null,
         status: 'PLANNED',
         entryType: 'DEBIT',
-        description: 'Electric Bill',
+        description: 'Electric bill',
       },
       {
         id: 'entry-weekend',
@@ -122,7 +156,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         actualAmountCents: null,
         status: 'PLANNED',
         entryType: 'DEBIT',
-        description: 'Weekend Debit (shifts to next business day)',
+        description: 'Gym membership',
       },
       {
         id: 'entry-posted-held',
@@ -136,7 +170,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         entryType: 'INCOME',
         holdReleaseDate: addDays(currentDateStr, 1),
         isHoldEstimated: false,
-        description: 'Posted Deposit (held until tomorrow)',
+        description: 'Freelance deposit',
       },
       {
         id: 'entry-grocery-pending',
@@ -148,7 +182,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         actualAmountCents: null,
         status: 'PENDING',
         entryType: 'DEBIT',
-        description: 'Grocery Store (pending)',
+        description: 'Grocery store',
       },
     ],
 

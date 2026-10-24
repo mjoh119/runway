@@ -41,3 +41,15 @@ export function dayOfWeek(date: string): number {
 export function daysInMonth(year: number, month: number): number {
   return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 }
+
+/** Whole days from `from` to `to` (negative when `to` is earlier). */
+export function daysBetween(from: string, to: string): number {
+  return Math.round((parse(to) - parse(from)) / 86_400_000);
+}
+
+const WEEKDAY_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+
+/** Three-letter weekday abbreviation, e.g. "Sat". */
+export function weekdayAbbr(date: string): string {
+  return WEEKDAY_ABBR[dayOfWeek(date)];
+}

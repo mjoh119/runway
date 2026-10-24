@@ -36,24 +36,34 @@ function lastWeekday(year: number, month: number, weekday: number): string {
   return iso(year, month, lastDay - ((lastDow - weekday + 7) % 7));
 }
 
+export interface NamedHoliday {
+  name: string;
+  date: string; // observed date, 'YYYY-MM-DD'
+}
+
+/** The 11 Federal Reserve holidays for a calendar year with names, as observed dates. */
+export function generateNamedFederalHolidays(year: number): NamedHoliday[] {
+  const MON = 1;
+  const THU = 4;
+  return [
+    { name: "New Year's Day", date: applyObservanceRules(iso(year, 0, 1)) },
+    { name: 'MLK Day', date: nthWeekday(year, 0, MON, 3) },
+    { name: 'Presidents Day', date: nthWeekday(year, 1, MON, 3) },
+    { name: 'Memorial Day', date: lastWeekday(year, 4, MON) },
+    { name: 'Juneteenth', date: applyObservanceRules(iso(year, 5, 19)) },
+    { name: 'Independence Day', date: applyObservanceRules(iso(year, 6, 4)) },
+    { name: 'Labor Day', date: nthWeekday(year, 8, MON, 1) },
+    { name: 'Columbus Day', date: nthWeekday(year, 9, MON, 2) },
+    { name: 'Veterans Day', date: applyObservanceRules(iso(year, 10, 11)) },
+    { name: 'Thanksgiving', date: nthWeekday(year, 10, THU, 4) },
+    { name: 'Christmas Day', date: applyObservanceRules(iso(year, 11, 25)) },
+  ];
+}
+
 /**
  * The 11 Federal Reserve holidays for a calendar year, as observed dates.
  * (A Sunday New Year's Day on Jan 1 shifts to Jan 2; a Saturday Jan 1 stays put.)
  */
 export function generateFederalHolidays(year: number): string[] {
-  const MON = 1;
-  const THU = 4;
-  return [
-    applyObservanceRules(iso(year, 0, 1)), // New Year's Day
-    nthWeekday(year, 0, MON, 3), // Martin Luther King Jr. Day
-    nthWeekday(year, 1, MON, 3), // Washington's Birthday (Presidents Day)
-    lastWeekday(year, 4, MON), // Memorial Day
-    applyObservanceRules(iso(year, 5, 19)), // Juneteenth
-    applyObservanceRules(iso(year, 6, 4)), // Independence Day
-    nthWeekday(year, 8, MON, 1), // Labor Day
-    nthWeekday(year, 9, MON, 2), // Columbus Day
-    applyObservanceRules(iso(year, 10, 11)), // Veterans Day
-    nthWeekday(year, 10, THU, 4), // Thanksgiving
-    applyObservanceRules(iso(year, 11, 25)), // Christmas Day
-  ];
+  return generateNamedFederalHolidays(year).map((h) => h.date);
 }
