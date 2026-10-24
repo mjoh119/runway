@@ -132,56 +132,66 @@ function Body({ state, onRetry }: { state: State; onRetry: () => void }) {
   const thresholdCents = projection.settings?.lowBalanceThresholdCents ?? below?.thresholdCents ?? null;
   const payday = vm.nextPayday;
 
+  const hasLedgerItems = vm.ledgerDifferenceItems.length > 0;
+
   return (
-    <div className="grid gap-5 xl:grid-cols-3">
-      <div className="flex min-w-0 flex-col gap-5 xl:col-span-2">
-        <div className="grid grid-cols-2 gap-5 lg:grid-cols-[minmax(0,1fr)_14rem]">
-          <RunwayCallout
-            className="col-span-2 lg:col-span-1 lg:row-span-2"
-            runway={runway}
-            isEstimated={balances[0].isEstimated}
-            horizonDays={horizonDays}
-            daysUntilPayday={vm.daysUntilPayday}
-            belowThreshold={below ?? null}
-          />
-          <StatCard
-            label="Available now"
-            info="What you can spend today: your ledger balance minus pending charges and deposits still on hold."
-            footer={
-              vm.ledgerNowCents !== null && (
-                <>
-                  <Money cents={vm.ledgerNowCents} tone="muted" /> in ledger
-                </>
-              )
-            }
-          >
-            {vm.availableNowCents !== null ? <Money cents={vm.availableNowCents} tone="auto" /> : '—'}
-          </StatCard>
-          <StatCard label="Next payday" footer={payday?.name}>
-            {payday ? (
-              <>
-                <time dateTime={payday.date}>
-                  {weekdayAbbr(payday.date)} {formatMonthDay(payday.date)}
-                </time>
-                <span className="font-normal text-muted-foreground"> · </span>
-                <Money cents={payday.amountCents} showPlus tone="income" className="font-medium" />
-              </>
-            ) : (
-              <span className="text-base font-normal text-muted-foreground">None scheduled</span>
-            )}
-          </StatCard>
-        </div>
-        <BalanceChart
-          series={chart.series}
-          boundaries={chart.boundaries}
-          runway={runway}
-          thresholdCents={thresholdCents}
-          paydayDate={payday?.date ?? null}
-        />
-        <LedgerDifferenceCard items={vm.ledgerDifferenceItems} />
-        <VarianceCard variance={projection.variance ?? null} />
-      </div>
-      <UpcomingCard groups={vm.upcomingGroups} summary={vm.cycleSummary} className="min-w-0 xl:h-full" />
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-12">
+      <RunwayCallout
+        className="md:col-span-2 xl:col-span-6"
+        runway={runway}
+        isEstimated={balances[0].isEstimated}
+        horizonDays={horizonDays}
+        daysUntilPayday={vm.daysUntilPayday}
+        belowThreshold={below ?? null}
+      />
+      <StatCard
+        className="xl:col-span-3"
+        label="Available now"
+        info="What you can spend today: your ledger balance minus pending charges and deposits still on hold."
+        footer={
+          vm.ledgerNowCents !== null && (
+            <>
+              <Money cents={vm.ledgerNowCents} tone="muted" /> in ledger
+            </>
+          )
+        }
+      >
+        {vm.availableNowCents !== null ? <Money cents={vm.availableNowCents} tone="auto" /> : '—'}
+      </StatCard>
+      <StatCard className="xl:col-span-3" label="Next payday" footer={payday?.name}>
+        {payday ? (
+          <>
+            <time dateTime={payday.date}>
+              {weekdayAbbr(payday.date)} {formatMonthDay(payday.date)}
+            </time>
+            <span className="font-normal text-muted-foreground"> · </span>
+            <Money cents={payday.amountCents} showPlus tone="income" className="font-medium" />
+          </>
+        ) : (
+          <span className="text-base font-normal text-muted-foreground">None scheduled</span>
+        )}
+      </StatCard>
+
+      <BalanceChart
+        className="md:col-span-2 xl:col-span-8"
+        series={chart.series}
+        boundaries={chart.boundaries}
+        runway={runway}
+        thresholdCents={thresholdCents}
+        paydayDate={payday?.date ?? null}
+      />
+      <UpcomingCard
+        groups={vm.upcomingGroups}
+        summary={vm.cycleSummary}
+        className="min-w-0 md:col-span-2 xl:col-span-4 xl:row-span-2"
+      />
+      <VarianceCard
+        variance={projection.variance ?? null}
+        className={hasLedgerItems ? 'xl:col-span-4' : 'md:col-span-2 xl:col-span-8'}
+      />
+      {hasLedgerItems && (
+        <LedgerDifferenceCard items={vm.ledgerDifferenceItems} className="xl:col-span-4" />
+      )}
     </div>
   );
 }

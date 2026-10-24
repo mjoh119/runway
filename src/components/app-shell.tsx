@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, LayoutDashboard, Settings, Wallet, type LucideIcon } from 'lucide-react';
+import { ClipboardList, LayoutDashboard, Settings, Wallet, type LucideIcon } from 'lucide-react';
 import { LogFlow } from '@/components/log-flow/log-flow';
 import { LogFlowProvider } from '@/components/log-flow/log-flow-context';
 import { ResetDemoButton } from '@/components/reset-demo-button';
@@ -18,7 +18,7 @@ interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { href: '/', label: 'Overview', icon: LayoutDashboard },
   { href: '/envelopes', label: 'Envelopes', icon: Wallet },
-  { href: '/activity', label: 'Activity', icon: Activity },
+  { href: '/activity', label: 'Log', icon: ClipboardList },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -33,8 +33,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <LogFlowProvider>
     <div className="min-h-screen md:flex">
-      <aside className="sticky top-0 hidden h-screen w-50 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-3 py-6 md:flex">
-        <p className="px-3 text-xl font-bold tracking-tight">Runway</p>
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-4 py-6 md:flex">
+        <p className="px-3 text-2xl font-bold tracking-tight">Runway</p>
         <nav aria-label="Main" className="mt-8 flex flex-col gap-1">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
@@ -44,7 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={href}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none',
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none',
                   active
                     ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                     : 'text-sidebar-foreground hover:bg-muted',
@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p className="text-lg font-bold tracking-tight">Runway</p>
           <TodayLabel className="text-xs text-muted-foreground" />
         </div>
-        <main className="flex-1 px-4 pt-4 pb-6 md:px-8 md:py-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 pt-4 pb-6 md:p-8">{children}</main>
         <ResetDemoButton className="px-4 pb-24 md:hidden" />
       </div>
 

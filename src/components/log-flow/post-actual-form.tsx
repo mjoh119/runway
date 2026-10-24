@@ -148,10 +148,10 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
         </p>
       ) : null}
       <div className="flex justify-between gap-2">
-        <Button type="button" variant="outline" onClick={onSkip} disabled={submitting || !current}>
+        <Button type="button" size="lg" variant="outline" onClick={onSkip} disabled={submitting || !current}>
           Skip this entry
         </Button>
-        <Button type="submit" disabled={submitting || !current}>
+        <Button type="submit" size="lg" disabled={submitting || !current}>
           Post actual
         </Button>
       </div>

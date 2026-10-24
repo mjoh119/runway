@@ -5,7 +5,8 @@ import { dispatchRunwayChanged } from '@/components/log-flow/events';
 import { MobileTitle, PageHeader } from '@/components/page-header';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { CalendarClock, Landmark, TriangleAlert } from 'lucide-react';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCentsPlain, parseMoney } from '@/lib/money';
 
 type LoadState = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready' };
@@ -17,7 +18,7 @@ type SettingsResult = { lowBalanceThresholdCents: number | null; projectionHoriz
 const HORIZON_ERROR = 'Projection horizon must be a whole number from 1 to 365';
 
 const inputClass =
-  'h-9 w-full max-w-xs rounded-lg border border-border bg-background px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive';
+  'h-10 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive';
 
 /** Visitor's local calendar date. Never toISOString(): it converts to UTC. */
 function localToday(): string {
@@ -115,7 +116,7 @@ export default function SettingsPage() {
     <>
       <PageHeader title="Settings" subtitle="Tune the low-balance warning and how far ahead Runway looks." />
       <MobileTitle title="Settings" />
-      <div className="flex max-w-2xl flex-col gap-5">
+      <div className="flex flex-col gap-6">
         {loadState.kind === 'loading' && (
           <Card>
             <p role="status" className="px-(--card-spacing) text-muted-foreground">
@@ -136,9 +137,16 @@ export default function SettingsPage() {
           </Card>
         )}
         {loadState.kind === 'ready' && (
-          <Card>
-            <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5 px-(--card-spacing)">
-              <div className="flex flex-col gap-1.5">
+          <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TriangleAlert className="size-4.5 text-muted-foreground" aria-hidden="true" />
+                  <h2 className="text-base font-semibold">Low-balance warning</h2>
+                </CardTitle>
+                <CardDescription>Get warned when your runway dips below an amount you choose.</CardDescription>
+              </CardHeader>
+              <div className="flex flex-col gap-1.5 px-(--card-spacing)">
                 <label htmlFor="threshold" className="text-sm font-medium">
                   Low-balance threshold (dollars)
                 </label>
@@ -163,8 +171,17 @@ export default function SettingsPage() {
                   </p>
                 )}
               </div>
+            </Card>
 
-              <div className="flex flex-col gap-1.5">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarClock className="size-4.5 text-muted-foreground" aria-hidden="true" />
+                  <h2 className="text-base font-semibold">Projection</h2>
+                </CardTitle>
+                <CardDescription>How far ahead Runway projects when no income is scheduled.</CardDescription>
+              </CardHeader>
+              <div className="flex flex-col gap-1.5 px-(--card-spacing)">
                 <label htmlFor="horizon" className="text-sm font-medium">
                   Projection horizon (days)
                 </label>
@@ -189,29 +206,59 @@ export default function SettingsPage() {
                   </p>
                 )}
               </div>
+            </Card>
 
-              {errors.form && (
-                <p role="alert" className="text-sm text-destructive">
-                  {errors.form}
-                </p>
-              )}
-
-              <div className="flex items-center gap-3">
-                <Button type="submit" disabled={saving}>
+            <Card className="lg:col-span-2">
+              <div className="flex flex-wrap items-center justify-between gap-4 px-(--card-spacing)">
+                <div className="min-h-6">
+                  {errors.form && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {errors.form}
+                    </p>
+                  )}
+                  {saved && (
+                    <p role="status" className="text-sm font-medium text-success">
+                      Settings saved.
+                    </p>
+                  )}
+                  {!errors.form && !saved && (
+                    <p className="text-sm text-muted-foreground">Changes apply to your Overview right away.</p>
+                  )}
+                </div>
+                <Button type="submit" size="lg" disabled={saving} className="px-5">
                   {saving ? 'Saving…' : 'Save settings'}
                 </Button>
-                {saved && (
-                  <p role="status" className="text-sm text-muted-foreground">
-                    Settings saved.
-                  </p>
-                )}
               </div>
-            </form>
-          </Card>
+            </Card>
+          </form>
         )}
-        <p className="text-sm text-muted-foreground">
-          Editing schedules and accounts is not available yet.
-        </p>
+
+        <section aria-label="Schedules and accounts" className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarClock className="size-4.5 text-muted-foreground" aria-hidden="true" />
+                <h2 className="text-base font-semibold">Schedules</h2>
+              </CardTitle>
+              <CardDescription>Recurring paychecks and bills.</CardDescription>
+            </CardHeader>
+            <p className="px-(--card-spacing) text-sm text-muted-foreground">
+              Editing schedules is not available yet.
+            </p>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Landmark className="size-4.5 text-muted-foreground" aria-hidden="true" />
+                <h2 className="text-base font-semibold">Accounts</h2>
+              </CardTitle>
+              <CardDescription>Balances Runway projects from.</CardDescription>
+            </CardHeader>
+            <p className="px-(--card-spacing) text-sm text-muted-foreground">
+              Editing accounts is not available yet.
+            </p>
+          </Card>
+        </section>
       </div>
     </>
   );

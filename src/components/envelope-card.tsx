@@ -1,5 +1,6 @@
 'use client';
 
+import { ChevronDown } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { RESET_PERIOD_LABELS } from '@/components/envelope-form';
 import { dispatchRunwayChanged } from '@/components/log-flow/events';
@@ -168,36 +169,36 @@ function LineItemRow({ item, envelopeName }: { item: LineItemView; envelopeName:
   }
 
   return (
-    <li className="flex flex-col gap-1 py-2">
+    <li className="flex flex-col gap-1 py-2.5">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate">{item.description ?? 'Purchase'}</p>
+          <p className="truncate text-sm font-medium">{item.description ?? 'Purchase'}</p>
           <p className="text-xs text-muted-foreground">
             <time dateTime={item.purchaseDate}>{formatMonthDay(item.purchaseDate)}</time>
           </p>
         </div>
-        <Money cents={-item.amountCents} />
-      </div>
-      <div className="flex gap-1">
-        <Button
-          type="button"
-          size="xs"
-          variant="ghost"
-          onClick={() => setMode('edit')}
-          aria-label={`Edit ${label}`}
-        >
-          Edit
-        </Button>
-        <Button
-          type="button"
-          size="xs"
-          variant="ghost"
-          disabled={busy}
-          onClick={() => void onDelete()}
-          aria-label={`Delete ${label}`}
-        >
-          Delete
-        </Button>
+        <div className="flex shrink-0 items-center gap-1">
+          <Money cents={-item.amountCents} className="mr-1 text-sm font-medium" />
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            onClick={() => setMode('edit')}
+            aria-label={`Edit ${label}`}
+          >
+            Edit
+          </Button>
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            disabled={busy}
+            onClick={() => void onDelete()}
+            aria-label={`Delete ${label}`}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       {errors.form && (
         <p role="alert" className="text-sm text-destructive">
@@ -207,41 +208,68 @@ function LineItemRow({ item, envelopeName }: { item: LineItemView; envelopeName:
     </li>
   );
 }
-
 function ItemList({
   title,
   period,
   items,
   envelopeName,
+  defaultOpen,
 }: {
   title: string;
   period: EnvelopePeriod;
   items: LineItemView[];
   envelopeName: string;
+  defaultOpen?: boolean;
 }) {
   return (
-    <section aria-label={`${title}, ${envelopeName}`}>
-      <h3 className="text-xs font-medium text-muted-foreground">
-        {title} · {rangeLabel(period)}
-      </h3>
+    <details open={defaultOpen} className="group border-t border-border pt-3">
+      <summary
+        aria-label={`${title}, ${envelopeName}`}
+        className="flex cursor-pointer list-none items-center justify-between gap-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase [&::-webkit-details-marker]:hidden"
+      >
+        <span>
+          {title} · {rangeLabel(period)}
+        </span>
+        <span className="flex items-center gap-1 font-medium normal-case">
+          {items.length} {items.length === 1 ? 'purchase' : 'purchases'}
+          <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
+        </span>
+      </summary>
       {items.length === 0 ? (
         <p className="py-2 text-sm text-muted-foreground">No purchases.</p>
       ) : (
-        <ul className="divide-y divide-border">
+        <ul className="mt-1 divide-y divide-border">
           {items.map((item) => (
-            <LineItemRow key={`${item.id}:${item.amountCents}:${item.purchaseDate}:${item.description}`} item={item} envelopeName={envelopeName} />
+            <LineItemRow
+              key={`${item.id}:${item.amountCents}:${item.purchaseDate}:${item.description}`}
+              item={item}
+              envelopeName={envelopeName}
+            />
           ))}
         </ul>
       )}
-    </section>
+    </details>
   );
 }
 
-/** Integer percentage of the budget spent, capped at 100. */
-function percentSpent(spentCents: number, budgetCents: number): number {
+/** Integer percentage of the budget spent (not capped, so 118% can be shown). */
+function percentUsed(spentCents: number, budgetCents: number): number {
   if (budgetCents <= 0) return spentCents > 0 ? 100 : 0;
-  return Math.min(100, Math.floor((spentCents * 100) / budgetCents));
+  return Math.floor((spentCents * 100) / budgetCents);
 }
+
+/** UI-kit envelope states: normal (blue), near limit at 80% or more (amber), over budget (red). */
+export type EnvelopeState = 'normal' | 'near' | 'over';
+export function envelopeState(spentCents: number, budgetCents: number, overageCents: number): EnvelopeState {
+  if (overageCents > 0) return 'over';
+  return percentUsed(spentCents, budgetCents) >= 80 ? 'near' : 'normal';
+}
+
+const BAR_CLASS: Record<EnvelopeState, string> = {
+  normal: 'bg-primary',
+  near: 'bg-orange-500',
+  over: 'bg-destructive',
+};
 
 export function EnvelopeCard({
   view,
@@ -252,86 +280,92 @@ export function EnvelopeCard({
   onEdit: () => void;
   onAddPurchase: () => void;
 }) {
-  const overspent = view.overageCents > 0;
-  const percent = percentSpent(view.spentCents, view.budgetCents);
-  const valueText = overspent
-    ? `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, overspent by ${formatCents(view.overageCents)}`
-    : `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, ${formatCents(view.leftCents)} left`;
+  const state = envelopeState(view.spentCents, view.budgetCents, view.overageCents);
+  const percent = percentUsed(view.spentCents, view.budgetCents);
+  const barWidth = Math.min(100, percent);
+  const valueText =
+    state === 'over'
+      ? `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, overspent by ${formatCents(view.overageCents)}`
+      : `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, ${formatCents(view.leftCents)} left`;
   const nameId = `envelope-title-${view.id}`;
 
   return (
-    <Card aria-labelledby={nameId} role="group">
-      <div className="flex flex-col gap-4 px-(--card-spacing)">
+    <Card aria-labelledby={nameId} role="group" className="h-full">
+      <div className="flex h-full flex-col gap-4 px-(--card-spacing)">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 id={nameId} className="font-heading text-base font-medium">
+            <h2 id={nameId} className="font-heading text-base leading-6 font-semibold">
               {view.name}
             </h2>
             <p className="text-xs text-muted-foreground">
               {RESET_PERIOD_LABELS[view.resetPeriod]} · {rangeLabel(view.period)}
             </p>
           </div>
-          {overspent && <Chip variant="overdue">Overspent by {formatCents(view.overageCents)}</Chip>}
+          {state === 'over' && <Chip variant="overdue">Over budget</Chip>}
+          {state === 'near' && <Chip variant="warning">Near limit</Chip>}
         </div>
 
-        <div
-          role="progressbar"
-          aria-labelledby={nameId}
-          aria-valuemin={0}
-          aria-valuemax={view.budgetCents}
-          aria-valuenow={Math.min(view.spentCents, view.budgetCents)}
-          aria-valuetext={valueText}
-          className="h-2 w-full overflow-hidden rounded-full bg-muted"
-        >
+        <div>
+          <p className="money text-2xl leading-8 font-semibold">
+            {formatCents(view.spentCents)}{' '}
+            <span className="text-sm font-normal text-muted-foreground">of {formatCents(view.budgetCents)}</span>
+          </p>
           <div
-            className={overspent ? 'h-full bg-destructive' : 'h-full bg-primary'}
-            style={{ width: `${percent}%` }}
-          />
+            role="progressbar"
+            aria-labelledby={nameId}
+            aria-valuemin={0}
+            aria-valuemax={view.budgetCents}
+            aria-valuenow={Math.min(view.spentCents, view.budgetCents)}
+            aria-valuetext={valueText}
+            className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-muted"
+          >
+            <div className={`h-full rounded-full ${BAR_CLASS[state]}`} style={{ width: `${barWidth}%` }} />
+          </div>
+          <div className="mt-2 flex items-center justify-between text-sm">
+            {state === 'over' ? (
+              <Money cents={view.overageCents} tone="default" className="font-medium text-destructive" />
+            ) : (
+              <span className="money font-medium">{formatCents(view.leftCents)} left</span>
+            )}
+            <span className="text-muted-foreground">
+              {state === 'over' ? `${formatCents(view.overageCents)} over · ` : ''}
+              {percent}% used
+            </span>
+          </div>
         </div>
 
-        <dl className="grid grid-cols-3 gap-3 text-sm">
-          <div>
-            <dt className="text-xs text-muted-foreground">Budget</dt>
-            <dd>
-              <Money cents={view.budgetCents} />
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-muted-foreground">Spent</dt>
-            <dd>
-              <Money cents={view.spentCents} />
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-muted-foreground">Left</dt>
-            <dd>
-              <Money cents={view.leftCents} />
-            </dd>
-          </div>
-        </dl>
-
-        {overspent && view.runwayImpactCents > 0 && (
-          <p className="text-sm text-destructive">Runway is {formatCents(view.runwayImpactCents)} lower</p>
+        {state === 'over' && view.runwayImpactCents > 0 && (
+          <p className="rounded-lg bg-destructive-soft px-3 py-2 text-sm font-medium text-destructive">
+            Runway is {formatCents(view.runwayImpactCents)} lower
+          </p>
         )}
 
         <div className="flex flex-wrap gap-2">
-          <Button type="button" size="sm" onClick={onAddPurchase} aria-label={`Add purchase to ${view.name}`}>
+          <Button type="button" size="lg" onClick={onAddPurchase} aria-label={`Add purchase to ${view.name}`}>
             Add purchase
           </Button>
-          <Button type="button" size="sm" variant="outline" onClick={onEdit} aria-label={`Edit ${view.name}`}>
+          <Button type="button" size="lg" variant="outline" onClick={onEdit} aria-label={`Edit ${view.name}`}>
             Edit envelope
           </Button>
         </div>
 
-        <ItemList title="Current period" period={view.period} items={view.currentItems} envelopeName={view.name} />
-        {view.preceding && (
+        <div className="mt-auto flex flex-col gap-3">
           <ItemList
-            title="Previous period"
-            period={view.preceding.period}
-            items={view.preceding.items}
+            title="Current period"
+            period={view.period}
+            items={view.currentItems}
             envelopeName={view.name}
+            defaultOpen
           />
-        )}
+          {view.preceding && (
+            <ItemList
+              title="Previous period"
+              period={view.preceding.period}
+              items={view.preceding.items}
+              envelopeName={view.name}
+            />
+          )}
+        </div>
       </div>
     </Card>
   );

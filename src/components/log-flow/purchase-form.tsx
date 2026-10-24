@@ -129,7 +129,7 @@ export function PurchaseForm() {
         </p>
       ) : null}
       <div className="flex justify-end">
-        <Button type="submit" disabled={submitting || !envelopeId}>
+        <Button type="submit" size="lg" disabled={submitting || !envelopeId}>
           Add purchase
         </Button>
       </div>

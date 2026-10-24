@@ -7,7 +7,10 @@ import { RUNWAY_CHANGED_EVENT } from '@/components/log-flow/events';
 import { useLogFlow } from '@/components/log-flow/log-flow-context';
 import { MobileTitle, PageHeader } from '@/components/page-header';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
+import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Money } from '@/components/ui/money';
+import { StatCard } from '@/components/ui/stat-card';
 import { Card } from '@/components/ui/card';
 import type { EnvelopeCardView } from '@/lib/envelopes/view-model';
 
@@ -58,19 +61,41 @@ export default function EnvelopesPage() {
 
   const formNode =
     form.kind === 'closed' ? null : (
-      <EnvelopeForm
-        key={form.kind === 'edit' ? form.envelope.id : 'new'}
-        envelope={form.kind === 'edit' ? form.envelope : undefined}
-        onDone={() => setForm({ kind: 'closed' })}
-        onCancel={() => setForm({ kind: 'closed' })}
-      />
+      <div className="md:col-span-2 xl:col-span-3">
+        <EnvelopeForm
+          key={form.kind === 'edit' ? form.envelope.id : 'new'}
+          envelope={form.kind === 'edit' ? form.envelope : undefined}
+          onDone={() => setForm({ kind: 'closed' })}
+          onCancel={() => setForm({ kind: 'closed' })}
+        />
+      </div>
     );
+
+  const newButton = (
+    <Button type="button" size="lg" onClick={() => setForm({ kind: 'create' })} disabled={form.kind !== 'closed'}>
+      New envelope
+    </Button>
+  );
+
+  const envelopes = state.kind === 'ready' ? state.envelopes : [];
+  const totalBudget = envelopes.reduce((s, e) => s + e.budgetCents, 0);
+  const totalSpent = envelopes.reduce((s, e) => s + e.spentCents, 0);
+  const totalLeft = envelopes.reduce((s, e) => s + e.leftCents, 0);
+  const totalOver = envelopes.reduce((s, e) => s + e.overageCents, 0);
+  const overCount = envelopes.filter((e) => e.overageCents > 0).length;
 
   return (
     <>
-      <PageHeader title="Envelopes" subtitle="Flexible spending budgets, and how they move your runway." />
-      <MobileTitle title="Envelopes" />
-      <div className="flex max-w-3xl flex-col gap-5">
+      <PageHeader
+        title="Envelopes"
+        subtitle="Flexible spending budgets, and how they move your runway."
+        actions={newButton}
+      />
+      <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
+        <MobileTitle title="Envelopes" className="mb-0" />
+        {newButton}
+      </div>
+      <div className="flex flex-col gap-6">
         {state.kind === 'loading' && (
           <Card>
             <p role="status" className="px-(--card-spacing) text-muted-foreground">
@@ -92,45 +117,66 @@ export default function EnvelopesPage() {
         )}
         {state.kind === 'ready' && (
           <>
-            {state.envelopes.length === 0 && form.kind === 'closed' ? (
+            {envelopes.length > 0 && (
+              <section aria-label="Envelope totals" className="grid grid-cols-2 gap-6 xl:grid-cols-4">
+                <StatCard label="Total budget" footer={`${envelopes.length} ${envelopes.length === 1 ? 'envelope' : 'envelopes'}`}>
+                  <Money cents={totalBudget} />
+                </StatCard>
+                <StatCard label="Spent this period" footer={totalBudget > 0 ? `${Math.floor((totalSpent * 100) / totalBudget)}% of budget` : undefined}>
+                  <Money cents={totalSpent} />
+                </StatCard>
+                <StatCard label="Left to spend" footer="Held back from your runway">
+                  <Money cents={totalLeft} />
+                </StatCard>
+                <StatCard
+                  label="Over budget"
+                  footer={overCount > 0 ? `${overCount} ${overCount === 1 ? 'envelope' : 'envelopes'} over` : 'All within budget'}
+                >
+                  <span className={totalOver > 0 ? 'text-destructive' : undefined}>
+                    <Money cents={totalOver} tone="default" />
+                  </span>
+                </StatCard>
+              </section>
+            )}
+
+            {envelopes.length === 0 && form.kind === 'closed' ? (
               <Card>
-                <div className="flex flex-col items-start gap-3 px-(--card-spacing)">
-                  <p className="text-muted-foreground">
-                    No envelopes yet. Create one to set aside money for flexible spending.
+                <div className="flex flex-col items-center gap-3 px-(--card-spacing) py-10 text-center">
+                  <span className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                    <Wallet className="size-6" aria-hidden="true" />
+                  </span>
+                  <h2 className="text-base font-semibold">No envelopes yet</h2>
+                  <p className="max-w-sm text-muted-foreground">
+                    Create your first envelope to start setting aside money for flexible spending.
                   </p>
-                  <Button type="button" onClick={() => setForm({ kind: 'create' })}>
+                  <Button type="button" size="lg" onClick={() => setForm({ kind: 'create' })}>
                     Create envelope
                   </Button>
                 </div>
               </Card>
             ) : (
-              form.kind === 'closed' && (
-                <div>
-                  <Button type="button" variant="outline" onClick={() => setForm({ kind: 'create' })}>
-                    New envelope
-                  </Button>
-                </div>
-              )
+              <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {formNode}
+                {envelopes.map((view) => (
+                  <EnvelopeCard
+                    key={view.id}
+                    view={view}
+                    onEdit={() =>
+                      setForm({
+                        kind: 'edit',
+                        envelope: {
+                          id: view.id,
+                          name: view.name,
+                          budgetCents: view.budgetCents,
+                          resetPeriod: view.resetPeriod,
+                        },
+                      })
+                    }
+                    onAddPurchase={() => openLogFlow({ mode: 'purchase' })}
+                  />
+                ))}
+              </div>
             )}
-            {formNode}
-            {state.envelopes.map((view) => (
-              <EnvelopeCard
-                key={view.id}
-                view={view}
-                onEdit={() =>
-                  setForm({
-                    kind: 'edit',
-                    envelope: {
-                      id: view.id,
-                      name: view.name,
-                      budgetCents: view.budgetCents,
-                      resetPeriod: view.resetPeriod,
-                    },
-                  })
-                }
-                onAddPurchase={() => openLogFlow({ mode: 'purchase' })}
-              />
-            ))}
           </>
         )}
       </div>

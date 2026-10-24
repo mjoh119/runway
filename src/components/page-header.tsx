@@ -13,10 +13,10 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="mb-6 hidden items-start justify-between gap-4 md:flex">
+    <header className="mb-6 hidden items-center justify-between gap-4 md:flex">
       <div>
-        <h1 className="text-[28px] leading-9 font-bold tracking-tight">{title}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+        <h1 className="text-2xl leading-8 font-semibold tracking-tight">{title}</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>
       </div>
       <div className="flex items-center gap-4">
         <TodayLabel className="text-sm text-muted-foreground" />

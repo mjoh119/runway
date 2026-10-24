@@ -124,7 +124,7 @@ export function OneOffForm() {
         </p>
       ) : null}
       <div className="flex justify-end">
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" size="lg" disabled={submitting}>
           Add one-off
         </Button>
       </div>
