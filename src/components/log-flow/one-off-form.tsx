@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { formatCentsPlain, parseMoney } from '@/lib/money';
-import { Field, inputClass, localToday, postJson, submitOnEnter } from './form-field';
+import { Field, FormActions, inputClass, localToday, postJson, submitOnEnter } from './form-field';
 import { useLogFlow } from './log-flow-context';
 import { alreadyHappenedDefault, nextAlreadyHappened } from './log-flow-state';
 import { useSubmit } from './use-submit';
@@ -123,11 +122,7 @@ export function OneOffForm() {
           {generalError}
         </p>
       ) : null}
-      <div className="flex justify-end">
-        <Button type="submit" size="lg" disabled={submitting}>
-          Add one-off
-        </Button>
-      </div>
+      <FormActions disabled={submitting} saveLabel="Add one-off" onCancel={closeLogFlow} />
     </form>
   );
 }

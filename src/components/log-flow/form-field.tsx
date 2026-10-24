@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import type { SubmitOutcome } from './use-submit';
 
 export const inputClass =
@@ -64,4 +65,31 @@ export function submitOnEnter(e: React.KeyboardEvent<HTMLFormElement>) {
     e.preventDefault();
     e.currentTarget.requestSubmit();
   }
+}
+
+/** Primary Save plus Cancel, with optional extra controls underneath. */
+export function FormActions({
+  disabled,
+  saveLabel = 'Save',
+  onCancel,
+  children,
+}: {
+  disabled?: boolean;
+  saveLabel?: string;
+  onCancel: () => void;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="mt-2 flex flex-col gap-3">
+      <div className="flex gap-3">
+        <Button type="submit" size="lg" className="flex-1" disabled={disabled}>
+          {saveLabel}
+        </Button>
+        <Button type="button" size="lg" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
+      {children}
+    </div>
+  );
 }

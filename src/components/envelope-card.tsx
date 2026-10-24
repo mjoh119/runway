@@ -1,13 +1,13 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronRight, Film, Fuel, ShoppingCart, Utensils, Wallet, type LucideIcon } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { RESET_PERIOD_LABELS } from '@/components/envelope-form';
 import { dispatchRunwayChanged } from '@/components/log-flow/events';
 import { Field, inputClass, localToday } from '@/components/log-flow/form-field';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
+import { AmountCell } from '@/components/ui/amount-cell';
+import { SectionCard } from '@/components/ui/section-card';
 import { Money } from '@/components/ui/money';
 import type { EnvelopePeriod } from '@/lib/envelopes/types';
 import type { EnvelopeCardView, LineItemView } from '@/lib/envelopes/view-model';
@@ -97,7 +97,7 @@ function LineItemRow({ item, envelopeName }: { item: LineItemView; envelopeName:
 
   if (mode === 'edit') {
     return (
-      <li className="py-2">
+      <li className="px-4 py-3">
         <form
           onSubmit={onSave}
           noValidate
@@ -169,86 +169,97 @@ function LineItemRow({ item, envelopeName }: { item: LineItemView; envelopeName:
   }
 
   return (
-    <li className="flex flex-col gap-1 py-2.5">
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{item.description ?? 'Purchase'}</p>
-          <p className="text-xs text-muted-foreground">
-            <time dateTime={item.purchaseDate}>{formatMonthDay(item.purchaseDate)}</time>
-          </p>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <Money cents={-item.amountCents} className="mr-1 text-sm font-medium" />
-          <Button
-            type="button"
-            size="xs"
-            variant="ghost"
-            onClick={() => setMode('edit')}
-            aria-label={`Edit ${label}`}
-          >
-            Edit
-          </Button>
-          <Button
-            type="button"
-            size="xs"
-            variant="ghost"
-            disabled={busy}
-            onClick={() => void onDelete()}
-            aria-label={`Delete ${label}`}
-          >
-            Delete
-          </Button>
-        </div>
-      </div>
+    <li className="flex items-center gap-3 px-4 py-2.5 text-sm">
+      <time dateTime={item.purchaseDate} className="w-16 shrink-0 text-muted-foreground">
+        {formatMonthDay(item.purchaseDate)}
+      </time>
+      <span className="min-w-0 flex-1 truncate font-medium">{item.description ?? 'Purchase'}</span>
+      <AmountCell cents={-item.amountCents} className="shrink-0" />
+      <span className="flex shrink-0 gap-1">
+        <Button type="button" size="xs" variant="ghost" onClick={() => setMode('edit')} aria-label={`Edit ${label}`}>
+          Edit
+        </Button>
+        <Button
+          type="button"
+          size="xs"
+          variant="ghost"
+          disabled={busy}
+          onClick={() => void onDelete()}
+          aria-label={`Delete ${label}`}
+        >
+          Delete
+        </Button>
+      </span>
       {errors.form && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="basis-full text-sm text-destructive">
           {errors.form}
         </p>
       )}
     </li>
   );
 }
+
 function ItemList({
   title,
   period,
   items,
   envelopeName,
-  defaultOpen,
+  collapsible,
 }: {
   title: string;
   period: EnvelopePeriod;
   items: LineItemView[];
   envelopeName: string;
-  defaultOpen?: boolean;
+  collapsible?: boolean;
 }) {
-  return (
-    <details open={defaultOpen} className="group border-t border-border pt-3">
-      <summary
-        aria-label={`${title}, ${envelopeName}`}
-        className="flex cursor-pointer list-none items-center justify-between gap-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase [&::-webkit-details-marker]:hidden"
-      >
-        <span>
-          {title} · {rangeLabel(period)}
-        </span>
-        <span className="flex items-center gap-1 font-medium normal-case">
-          {items.length} {items.length === 1 ? 'purchase' : 'purchases'}
+  const heading = (
+    <>
+      <span>
+        {title} &middot; {rangeLabel(period)}
+      </span>
+      <span className="flex items-center gap-1 font-medium normal-case">
+        {items.length} {items.length === 1 ? 'purchase' : 'purchases'}
+        {collapsible && (
           <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
-        </span>
-      </summary>
-      {items.length === 0 ? (
-        <p className="py-2 text-sm text-muted-foreground">No purchases.</p>
-      ) : (
-        <ul className="mt-1 divide-y divide-border">
-          {items.map((item) => (
-            <LineItemRow
-              key={`${item.id}:${item.amountCents}:${item.purchaseDate}:${item.description}`}
-              item={item}
-              envelopeName={envelopeName}
-            />
-          ))}
-        </ul>
-      )}
-    </details>
+        )}
+      </span>
+    </>
+  );
+  const headingClass =
+    'flex items-center justify-between gap-2 px-4 py-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase';
+  const list =
+    items.length === 0 ? (
+      <p className="px-4 py-3 text-sm text-muted-foreground">No purchases.</p>
+    ) : (
+      <ul className="divide-y divide-border border-t border-border">
+        {items.map((item) => (
+          <LineItemRow
+            key={`${item.id}:${item.amountCents}:${item.purchaseDate}:${item.description}`}
+            item={item}
+            envelopeName={envelopeName}
+          />
+        ))}
+      </ul>
+    );
+
+  if (collapsible) {
+    return (
+      <details className="group rounded-lg border border-border bg-background">
+        <summary
+          aria-label={`${title}, ${envelopeName}`}
+          className={`${headingClass} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}
+        >
+          {heading}
+        </summary>
+        {list}
+      </details>
+    );
+  }
+  return (
+    <section aria-label={`${title}, ${envelopeName}`} className="rounded-lg border border-border bg-background">
+      <h3 className={headingClass}>{heading}</h3>
+      {list}
+    </section>
   );
 }
 
@@ -258,7 +269,7 @@ function percentUsed(spentCents: number, budgetCents: number): number {
   return Math.floor((spentCents * 100) / budgetCents);
 }
 
-/** UI-kit envelope states: normal (blue), near limit at 80% or more (amber), over budget (red). */
+/** Envelope states: normal (primary), near limit at 80% or more (warning), over budget (danger). */
 export type EnvelopeState = 'normal' | 'near' | 'over';
 export function envelopeState(spentCents: number, budgetCents: number, overageCents: number): EnvelopeState {
   if (overageCents > 0) return 'over';
@@ -267,11 +278,138 @@ export function envelopeState(spentCents: number, budgetCents: number, overageCe
 
 const BAR_CLASS: Record<EnvelopeState, string> = {
   normal: 'bg-primary',
-  near: 'bg-orange-500',
-  over: 'bg-destructive',
+  near: 'bg-warning-foreground',
+  over: 'bg-danger',
 };
 
-export function EnvelopeCard({
+const ICON_RULES: [RegExp, LucideIcon][] = [
+  [/groc|food|market|supermarket/i, ShoppingCart],
+  [/gas|fuel|car|transport|commut/i, Fuel],
+  [/takeout|dining|restaurant|coffee|lunch|eat/i, Utensils],
+  [/entertain|fun|movie|game|hobb/i, Film],
+];
+
+/** Category icon chosen from the envelope's name; falls back to a wallet. */
+export function envelopeIcon(name: string): LucideIcon {
+  return ICON_RULES.find(([re]) => re.test(name))?.[1] ?? Wallet;
+}
+
+function stateOf(view: EnvelopeCardView): EnvelopeState {
+  return envelopeState(view.spentCents, view.budgetCents, view.overageCents);
+}
+
+function summaryText(view: EnvelopeCardView): string {
+  return stateOf(view) === 'over'
+    ? `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, overspent by ${formatCents(view.overageCents)}`
+    : `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, ${formatCents(view.leftCents)} left`;
+}
+
+function Bar({ view, labelledBy, className }: { view: EnvelopeCardView; labelledBy: string; className?: string }) {
+  const state = stateOf(view);
+  const width = Math.min(100, percentUsed(view.spentCents, view.budgetCents));
+  return (
+    <div
+      role="progressbar"
+      aria-labelledby={labelledBy}
+      aria-valuemin={0}
+      aria-valuemax={view.budgetCents}
+      aria-valuenow={Math.min(view.spentCents, view.budgetCents)}
+      aria-valuetext={summaryText(view)}
+      className={`h-2 w-full overflow-hidden rounded-full bg-muted ${className ?? ''}`}
+    >
+      <div className={`h-full rounded-full ${BAR_CLASS[state]}`} style={{ width: `${width}%` }} />
+    </div>
+  );
+}
+
+function LeftText({ view }: { view: EnvelopeCardView }) {
+  return stateOf(view) === 'over' ? (
+    <span className="money font-medium text-destructive">{formatCents(view.overageCents)} over</span>
+  ) : (
+    <span className="money font-medium">{formatCents(view.leftCents)} left</span>
+  );
+}
+
+/** Compact overview tile: icon, name, spent of budget, bar, left and % used. Selects the envelope. */
+export function EnvelopeTile({
+  view,
+  selected,
+  onSelect,
+}: {
+  view: EnvelopeCardView;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const state = stateOf(view);
+  const Icon = envelopeIcon(view.name);
+  const nameId = `envelope-tile-${view.id}`;
+  const border = state === 'over' ? 'border-danger' : selected ? 'border-ring' : 'border-border';
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      aria-label={`${view.name}, ${summaryText(view)}`}
+      className={`flex flex-col gap-3 rounded-xl border bg-card p-4 text-left transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 ${border} ${state === 'over' ? 'bg-destructive-soft hover:bg-destructive-soft' : ''}`}
+    >
+      <span className="flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-2">
+          <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+          <span id={nameId} className="truncate text-sm font-semibold">
+            {view.name}
+          </span>
+        </span>
+        <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+      </span>
+      <span className="money text-xl leading-7 font-semibold">
+        {formatCents(view.spentCents)}{' '}
+        <span className="text-sm font-normal text-muted-foreground">of {formatCents(view.budgetCents)}</span>
+      </span>
+      <Bar view={view} labelledBy={nameId} />
+      <span className="flex items-center justify-between text-xs">
+        <LeftText view={view} />
+        <span className="text-muted-foreground">{percentUsed(view.spentCents, view.budgetCents)}% used</span>
+      </span>
+    </button>
+  );
+}
+
+/** Collapsed row for the envelopes that are not currently selected. */
+export function EnvelopeRow({ view, onSelect }: { view: EnvelopeCardView; onSelect: () => void }) {
+  const state = stateOf(view);
+  const Icon = envelopeIcon(view.name);
+  const nameId = `envelope-row-${view.id}`;
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-label={`${view.name}, ${summaryText(view)}`}
+      className="flex w-full items-center gap-4 px-(--card-spacing) py-4 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <span className="min-w-0 flex-1">
+        <span id={nameId} className="block truncate text-sm font-semibold">
+          {view.name}
+        </span>
+        <span className="block truncate text-xs text-muted-foreground">
+          {RESET_PERIOD_LABELS[view.resetPeriod]} &middot; {rangeLabel(view.period)}
+        </span>
+      </span>
+      <span className="money hidden shrink-0 text-sm font-semibold sm:block">
+        {formatCents(view.spentCents)}{' '}
+        <span className="font-normal text-muted-foreground">of {formatCents(view.budgetCents)}</span>
+      </span>
+      <Bar view={view} labelledBy={nameId} className="hidden w-32 shrink-0 md:block" />
+      <span className={`w-20 shrink-0 text-right text-xs ${state === 'over' ? 'text-destructive' : 'text-muted-foreground'}`}>
+        {percentUsed(view.spentCents, view.budgetCents)}% used
+      </span>
+      <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+    </button>
+  );
+}
+
+/** Full detail panel for the selected envelope. */
+export function EnvelopeDetail({
   view,
   onEdit,
   onAddPurchase,
@@ -280,67 +418,17 @@ export function EnvelopeCard({
   onEdit: () => void;
   onAddPurchase: () => void;
 }) {
-  const state = envelopeState(view.spentCents, view.budgetCents, view.overageCents);
-  const percent = percentUsed(view.spentCents, view.budgetCents);
-  const barWidth = Math.min(100, percent);
-  const valueText =
-    state === 'over'
-      ? `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, overspent by ${formatCents(view.overageCents)}`
-      : `Spent ${formatCents(view.spentCents)} of ${formatCents(view.budgetCents)} budget, ${formatCents(view.leftCents)} left`;
+  const state = stateOf(view);
+  const Icon = envelopeIcon(view.name);
   const nameId = `envelope-title-${view.id}`;
-
   return (
-    <Card aria-labelledby={nameId} role="group" className="h-full">
-      <div className="flex h-full flex-col gap-4 px-(--card-spacing)">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 id={nameId} className="font-heading text-base leading-6 font-semibold">
-              {view.name}
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              {RESET_PERIOD_LABELS[view.resetPeriod]} · {rangeLabel(view.period)}
-            </p>
-          </div>
-          {state === 'over' && <Chip variant="overdue">Over budget</Chip>}
-          {state === 'near' && <Chip variant="warning">Near limit</Chip>}
-        </div>
-
-        <div>
-          <p className="money text-2xl leading-8 font-semibold">
-            {formatCents(view.spentCents)}{' '}
-            <span className="text-sm font-normal text-muted-foreground">of {formatCents(view.budgetCents)}</span>
-          </p>
-          <div
-            role="progressbar"
-            aria-labelledby={nameId}
-            aria-valuemin={0}
-            aria-valuemax={view.budgetCents}
-            aria-valuenow={Math.min(view.spentCents, view.budgetCents)}
-            aria-valuetext={valueText}
-            className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-muted"
-          >
-            <div className={`h-full rounded-full ${BAR_CLASS[state]}`} style={{ width: `${barWidth}%` }} />
-          </div>
-          <div className="mt-2 flex items-center justify-between text-sm">
-            {state === 'over' ? (
-              <Money cents={view.overageCents} tone="default" className="font-medium text-destructive" />
-            ) : (
-              <span className="money font-medium">{formatCents(view.leftCents)} left</span>
-            )}
-            <span className="text-muted-foreground">
-              {state === 'over' ? `${formatCents(view.overageCents)} over · ` : ''}
-              {percent}% used
-            </span>
-          </div>
-        </div>
-
-        {state === 'over' && view.runwayImpactCents > 0 && (
-          <p className="rounded-lg bg-destructive-soft px-3 py-2 text-sm font-medium text-destructive">
-            Runway is {formatCents(view.runwayImpactCents)} lower
-          </p>
-        )}
-
-        <div className="flex flex-wrap gap-2">
+    <SectionCard
+      id={`envelope-${view.id}`}
+      title={<span id={nameId}>{view.name}</span>}
+      description={`${RESET_PERIOD_LABELS[view.resetPeriod]} \u00b7 ${rangeLabel(view.period)}`}
+      icon={<Icon aria-hidden="true" />}
+      action={
+        <div className="flex flex-wrap justify-end gap-2">
           <Button type="button" size="lg" onClick={onAddPurchase} aria-label={`Add purchase to ${view.name}`}>
             Add purchase
           </Button>
@@ -348,25 +436,58 @@ export function EnvelopeCard({
             Edit envelope
           </Button>
         </div>
-
-        <div className="mt-auto flex flex-col gap-3">
-          <ItemList
-            title="Current period"
-            period={view.period}
-            items={view.currentItems}
-            envelopeName={view.name}
-            defaultOpen
-          />
-          {view.preceding && (
-            <ItemList
-              title="Previous period"
-              period={view.preceding.period}
-              items={view.preceding.items}
-              envelopeName={view.name}
-            />
-          )}
+      }
+      bodyClassName="flex flex-col gap-4"
+    >
+      <div className="rounded-lg border border-border bg-background p-4">
+        <dl className="grid grid-cols-3 gap-4 text-sm">
+          <div>
+            <dt className="text-xs text-muted-foreground">Budget</dt>
+            <dd className="mt-0.5 text-lg font-semibold">
+              <Money cents={view.budgetCents} />
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-muted-foreground">Spent</dt>
+            <dd className="mt-0.5 text-lg font-semibold">
+              <Money cents={view.spentCents} />
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-muted-foreground">{state === 'over' ? 'Over' : 'Left'}</dt>
+            <dd className="mt-0.5 text-lg font-semibold">
+              {state === 'over' ? (
+                <Money cents={view.overageCents} className="text-destructive" />
+              ) : (
+                <Money cents={view.leftCents} />
+              )}
+            </dd>
+          </div>
+        </dl>
+        <div className="mt-4 flex items-center gap-3">
+          <Bar view={view} labelledBy={nameId} className="flex-1" />
+          <span className="shrink-0 text-xs text-muted-foreground">
+            {percentUsed(view.spentCents, view.budgetCents)}% used
+          </span>
         </div>
       </div>
-    </Card>
+
+      {state === 'over' && view.runwayImpactCents > 0 && (
+        <p className="rounded-lg bg-destructive-soft px-3 py-2 text-sm font-medium text-destructive">
+          Runway is {formatCents(view.runwayImpactCents)} lower
+        </p>
+      )}
+
+      <ItemList title="Recent purchases" period={view.period} items={view.currentItems} envelopeName={view.name} />
+      {view.preceding && (
+        <ItemList
+          title="Previous period"
+          period={view.preceding.period}
+          items={view.preceding.items}
+          envelopeName={view.name}
+          collapsible
+        />
+      )}
+    </SectionCard>
   );
 }

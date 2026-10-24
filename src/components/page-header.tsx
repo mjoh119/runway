@@ -1,7 +1,6 @@
 import { TodayLabel } from '@/components/today-label';
-import { cn } from '@/lib/utils';
 
-/** Desktop page header (hidden on mobile, where the shell shows a compact bar instead). */
+/** Title and subtitle on the left, "Today is <date>" (and optional actions) on the right. Same on every page. */
 export function PageHeader({
   title,
   subtitle,
@@ -9,24 +8,19 @@ export function PageHeader({
 }: {
   title: string;
   subtitle: string;
-  /** Optional controls shown beside the date, e.g. the Log button. */
+  /** Optional controls beside the date, e.g. the Log button. */
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="mb-6 hidden items-center justify-between gap-4 md:flex">
-      <div>
+    <header className="mb-6 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+      <div className="min-w-0">
         <h1 className="text-2xl leading-8 font-semibold tracking-tight">{title}</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>
       </div>
       <div className="flex items-center gap-4">
-        <TodayLabel className="text-sm text-muted-foreground" />
+        <TodayLabel className="text-sm whitespace-nowrap text-muted-foreground" />
         {actions}
       </div>
     </header>
   );
-}
-
-/** Mobile-only page title, so each route still has an h1 under the compact bar. */
-export function MobileTitle({ title, className }: { title: string; className?: string }) {
-  return <h1 className={cn('mb-4 text-2xl font-bold tracking-tight md:hidden', className)}>{title}</h1>;
 }

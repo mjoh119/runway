@@ -46,7 +46,7 @@ export function ResetDemoButton({ onReset, className }: ResetDemoButtonProps) {
           type="button"
           onClick={handleClick}
           disabled={pending}
-          className="rounded-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none disabled:opacity-50"
+          className="rounded-sm font-medium text-link hover:underline focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none disabled:opacity-50"
         >
           {pending ? 'Resetting…' : 'Reset'}
         </button>

@@ -2,13 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { runwayImpact } from '@/lib/runway-impact';
+import type { RunwayResult } from '@/lib/projection/types';
 import { formatCents } from '@/lib/format';
 import { formatCentsPlain, parseMoney } from '@/lib/money';
 import type { Entry } from '@/lib/projection/types';
 import type { ProjectionResponse } from '@/lib/projection-response';
-import { Field, inputClass, localToday, postJson, submitOnEnter } from './form-field';
+import { Field, FormActions, inputClass, localToday, postJson, submitOnEnter } from './form-field';
 import { useLogFlow } from './log-flow-context';
 import { postPrefill } from './log-flow-state';
+import { RunwayImpactBox } from './runway-impact';
 import { useSubmit } from './use-submit';
 
 function postable(p: ProjectionResponse): Entry[] {
@@ -32,6 +35,7 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
   const { submitting, error, errorField, submit } = useSubmit({ onSuccess: closeLogFlow });
   const [today] = useState(localToday);
   const [entries, setEntries] = useState<Entry[] | null>(null);
+  const [runway, setRunway] = useState<RunwayResult | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selected, setSelected] = useState(entryRef ?? '');
   const [amount, setAmount] = useState('');
@@ -47,6 +51,7 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
       .then((p) => {
         if (cancelled) return;
         const list = postable(p);
+        setRunway(p.runway ?? null);
         setEntries(list);
         const initial = list.find((e) => e.id === entryRef) ?? list[0];
         if (initial) {
@@ -61,6 +66,17 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
   }, [today, entryRef]);
 
   const current = useMemo(() => entries?.find((e) => e.id === selected), [entries, selected]);
+
+  const parsedAmount = parseMoney(amount);
+  const impact = current && parsedAmount.ok
+    ? runwayImpact({
+        entryType: current.entryType,
+        estimateCents: current.estimatedAmountCents,
+        actualCents: parsedAmount.cents,
+        entryDate: current.shiftedPostDate,
+        runway,
+      })
+    : ({ kind: 'unknown' } as const);
 
   const fieldError = (field: string) =>
     clientError?.field === field ? clientError.message : errorField === field ? error : null;
@@ -98,7 +114,7 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
 
   return (
     <form onSubmit={onSubmit} onKeyDown={submitOnEnter} noValidate className="flex flex-col gap-4">
-      <Field id="post-entry" label="Entry" error={fieldError('entryRef') ?? loadError}>
+      <Field id="post-entry" label="What are you marking as paid?" error={fieldError('entryRef') ?? loadError}>
         <select
           id="post-entry"
           className={inputClass}
@@ -117,7 +133,7 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
           ))}
         </select>
       </Field>
-      <Field id="post-amount" label="Actual amount" error={fieldError('amount')}>
+      <Field id="post-amount" label="Amount" error={fieldError('amount')}>
         <input
           id="post-amount"
           ref={amountRef}
@@ -147,14 +163,12 @@ export function PostActualForm({ entryRef }: { entryRef?: string }) {
           {generalError}
         </p>
       ) : null}
-      <div className="flex justify-between gap-2">
-        <Button type="button" size="lg" variant="outline" onClick={onSkip} disabled={submitting || !current}>
-          Skip this entry
+      <RunwayImpactBox impact={impact} />
+      <FormActions disabled={submitting || !current} saveLabel="Save" onCancel={closeLogFlow}>
+        <Button type="button" variant="ghost" onClick={onSkip} disabled={submitting || !current}>
+          Skip this entry instead
         </Button>
-        <Button type="submit" size="lg" disabled={submitting || !current}>
-          Post actual
-        </Button>
-      </div>
+      </FormActions>
     </form>
   );
 }

@@ -5,39 +5,35 @@ import { useState } from 'react';
 import { postJson } from '@/components/log-flow/form-field';
 import { useLogFlow } from '@/components/log-flow/log-flow-context';
 import { useSubmit } from '@/components/log-flow/use-submit';
+import { AmountCell } from '@/components/ui/amount-cell';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardHeader, CardTitle } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
+import { GroupedList } from '@/components/ui/grouped-list';
+import { SectionCard } from '@/components/ui/section-card';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { Money } from '@/components/ui/money';
 import { formatMonthDay } from '@/lib/format';
 import type { CycleSummary, UpcomingGroup, UpcomingRow } from '@/lib/overview-view-model';
 import { cn } from '@/lib/utils';
 
 function Row({ row }: { row: UpcomingRow }) {
-  const income = row.amountCents > 0;
   const { openLogFlow } = useLogFlow();
   // Skip posts straight away; success fires `runway:changed`, which refetches the page.
   const { submitting, error, submit } = useSubmit();
   const [today] = useState(() => new Date().toLocaleDateString('en-CA'));
   const skip = () => void submit(() => postJson('/api/entries/skip', { entryRef: row.id, today }));
   return (
-    <li className="px-5 py-3" data-testid="upcoming-row">
+    <div className="px-(--card-spacing) py-3" data-testid="upcoming-row">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-sm font-medium">{row.description}</span>
-            {row.status === 'overdue' && <Chip variant="overdue">Overdue</Chip>}
-            {row.status === 'pending' && <Chip variant="pending">Pending</Chip>}
-            {row.shifted && <Chip variant="neutral">{row.shifted.text}</Chip>}
+            {row.status === 'overdue' && <StatusBadge status="overdue" />}
+            {row.status === 'pending' && <StatusBadge status="pending" />}
+            {row.shifted && <StatusBadge status="moved" label={row.shifted.text} />}
           </div>
           {row.dueText && <p className="mt-0.5 text-xs text-muted-foreground">{row.dueText}</p>}
         </div>
-        <Money
-          cents={row.amountCents}
-          showPlus
-          tone={income ? 'income' : 'default'}
-          className="shrink-0 text-sm font-semibold"
-        />
+        <AmountCell cents={row.amountCents} className="shrink-0" />
       </div>
       <div className="mt-2 flex gap-2">
         <Button
@@ -66,7 +62,7 @@ function Row({ row }: { row: UpcomingRow }) {
           {error}
         </p>
       )}
-    </li>
+    </div>
   );
 }
 
@@ -74,22 +70,22 @@ function Summary({ summary }: { summary: CycleSummary }) {
   return (
     <section
       aria-label="This cycle"
-      className="m-5 mt-auto rounded-lg bg-accent p-4"
+      className="mt-auto border-t border-border bg-muted/40 px-(--card-spacing) py-4"
       data-testid="cycle-summary"
     >
-      <h3 className="text-sm font-semibold text-accent-foreground">
-        This cycle · {formatMonthDay(summary.startDate)} – {formatMonthDay(summary.endDate)}
+      <h3 className="text-sm font-semibold">
+        This cycle &middot; {formatMonthDay(summary.startDate)} &ndash; {formatMonthDay(summary.endDate)}
       </h3>
       <dl className="mt-3 grid grid-cols-3 gap-3">
         <div>
           <dt className="text-xs text-muted-foreground">Planned out</dt>
-          <dd className="mt-0.5 text-sm font-semibold">
+          <dd className="mt-0.5 text-base font-semibold">
             <Money cents={summary.plannedOutCents} />
           </dd>
         </div>
         <div>
           <dt className="text-xs text-muted-foreground">Planned in</dt>
-          <dd className="mt-0.5 text-sm font-semibold">
+          <dd className="mt-0.5 text-base font-semibold">
             <Money cents={summary.plannedInCents} />
           </dd>
         </div>
@@ -97,7 +93,7 @@ function Summary({ summary }: { summary: CycleSummary }) {
           <dt className="text-xs text-muted-foreground">Overdue</dt>
           <dd
             className={cn(
-              'money mt-0.5 text-sm font-semibold',
+              'money mt-0.5 text-base font-semibold',
               summary.overdueCount > 0 ? 'text-destructive' : 'text-foreground',
             )}
           >
@@ -118,40 +114,29 @@ export interface UpcomingCardProps {
 /** Upcoming entries grouped by settle date, with the current-cycle summary at the bottom. */
 export function UpcomingCard({ groups, summary, className }: UpcomingCardProps) {
   return (
-    <Card className={cn('gap-0 py-0', className)}>
-      <CardHeader className="px-5 py-5">
-        <CardTitle>
-          <h2 id="upcoming-heading" className="text-base font-semibold">
-            Upcoming
-          </h2>
-        </CardTitle>
-        <CardAction>
-          <Link href="/activity" className="text-sm font-medium text-primary hover:underline">
-            See all
-          </Link>
-        </CardAction>
-      </CardHeader>
+    <SectionCard
+      id="upcoming"
+      title="Upcoming"
+      className={className}
+      flush
+      action={
+        <Link href="/activity" className="text-sm font-medium text-link hover:underline">
+          See all
+        </Link>
+      }
+      bodyClassName="flex flex-col"
+    >
       {groups.length === 0 ? (
-        <p className="px-5 pb-5 text-sm text-muted-foreground">No upcoming entries.</p>
+        <p className="px-(--card-spacing) pb-(--card-spacing) text-sm text-muted-foreground">No upcoming entries.</p>
       ) : (
-        <div role="list" aria-labelledby="upcoming-heading">
-          {groups.map((g) => (
-            <div key={g.key} role="listitem">
-              <h3
-                className="bg-muted px-5 py-1.5 text-xs font-semibold tracking-wide text-muted-foreground"
-              >
-                {g.label}
-              </h3>
-              <ul className="divide-y divide-border/60">
-                {g.rows.map((r) => (
-                  <Row key={r.id} row={r} />
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <GroupedList
+          aria-labelledby="upcoming-heading"
+          groups={groups.map((g) => ({ key: g.key, label: g.label, items: g.rows }))}
+          itemKey={(r) => r.id}
+          renderItem={(r) => <Row row={r} />}
+        />
       )}
       {summary && <Summary summary={summary} />}
-    </Card>
+    </SectionCard>
   );
 }

@@ -1,6 +1,5 @@
 import { TriangleAlert } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
 import { Money } from '@/components/ui/money';
 import { formatMonthDay, formatCents } from '@/lib/format';
 import { weekdayAbbr } from '@/lib/projection/dates';
@@ -42,7 +41,7 @@ export function RunwayCallout({
     return (
       <Card className={className}>
         <section aria-labelledby="runway-heading" className="px-(--card-spacing)">
-          <h2 id="runway-heading" className="text-base font-semibold">
+          <h2 id="runway-heading" className="text-base font-semibold text-muted-foreground">
             Your runway
           </h2>
           <p className="mt-2 text-muted-foreground">No runway available</p>
@@ -59,7 +58,7 @@ export function RunwayCallout({
   return (
     <Card className={className}>
       <section aria-labelledby="runway-heading" className="flex flex-col px-(--card-spacing)">
-        <h2 id="runway-heading" className="text-base font-semibold">
+        <h2 id="runway-heading" className="text-base font-semibold text-muted-foreground">
           Your runway
         </h2>
         <p
@@ -78,11 +77,12 @@ export function RunwayCallout({
           · {tail}
         </p>
         {belowThreshold && (
-          <div className="mt-4">
-            <Chip variant="warning" className="px-3 py-1.5 text-sm">
-              <TriangleAlert aria-hidden="true" />
-              <span>Below your {formatCents(belowThreshold.thresholdCents)} threshold.</span>
-            </Chip>
+          <div
+            role="status"
+            className="mt-5 flex items-center gap-3 rounded-lg border border-warning-border bg-warning px-4 py-3 text-sm font-medium text-warning-foreground"
+          >
+            <TriangleAlert className="size-5 shrink-0" aria-hidden="true" />
+            <span>Below your {formatCents(belowThreshold.thresholdCents)} threshold.</span>
           </div>
         )}
       </section>

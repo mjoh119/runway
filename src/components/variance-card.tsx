@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { AmountCell } from '@/components/ui/amount-cell';
 import { Chip, type ChipVariant } from '@/components/ui/chip';
-import { Money } from '@/components/ui/money';
+import { SectionCard } from '@/components/ui/section-card';
 import { formatCents, formatMonthDay } from '@/lib/format';
 import type { ProjectionResponse } from '@/lib/projection-response';
 
@@ -23,25 +23,25 @@ function rowVariance(cents: number): { text: string; className: string } {
 export function VarianceCard({ variance, className }: { variance: Variance | null; className?: string }) {
   const chip = variance ? varianceChip(variance.totalCents) : null;
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id="variance-heading" className="text-base font-semibold">
-            Plan vs actual
-          </h2>
-          {chip && (
-            <Chip variant={chip.variant} data-testid="cumulative-variance">
-              {chip.text}
-            </Chip>
-          )}
-        </CardTitle>
-      </CardHeader>
+    <SectionCard
+      id="variance"
+      title="Plan vs actual"
+      className={className}
+      flush
+      action={
+        chip && (
+          <Chip variant={chip.variant} data-testid="cumulative-variance">
+            {chip.text}
+          </Chip>
+        )
+      }
+    >
       {!variance || variance.rows.length === 0 ? (
-        <p className="px-(--card-spacing) text-sm text-muted-foreground">
+        <p className="px-(--card-spacing) pb-(--card-spacing) text-sm text-muted-foreground">
           Nothing posted yet this cycle. Post an actual to see how it compares to the plan.
         </p>
       ) : (
-        <ul aria-labelledby="variance-heading" className="divide-y divide-border/60">
+        <ul aria-labelledby="variance-heading" className="divide-y divide-border border-t border-border">
           {variance.rows.map((r) => {
             const v = rowVariance(r.varianceCents);
             return (
@@ -53,27 +53,19 @@ export function VarianceCard({ variance, className }: { variance: Variance | nul
                 <div className="min-w-0">
                   <p className="text-sm font-medium">{r.description}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    Posted <time dateTime={r.actualDate}>{formatMonthDay(r.actualDate)}</time> · Estimate{' '}
-                    <Money cents={r.estimatedCents} showPlus tone="muted" />
+                    Posted <time dateTime={r.actualDate}>{formatMonthDay(r.actualDate)}</time> &middot; Estimate{' '}
+                    {formatCents(Math.abs(r.estimatedCents))}
                   </p>
                 </div>
                 <div className="text-right">
-                  <Money cents={r.actualCents} showPlus className="text-sm font-semibold" />
-                  <p className={`mt-0.5 text-xs font-medium ${v.className}`}>
-                    {v.text}
-                    {r.varianceCents !== 0 && (
-                      <>
-                        {' '}
-                        (<Money cents={r.varianceCents} showPlus tone="default" className="text-inherit" />)
-                      </>
-                    )}
-                  </p>
+                  <AmountCell cents={r.actualCents} />
+                  <p className={`mt-0.5 text-xs font-medium ${v.className}`}>{v.text}</p>
                 </div>
               </li>
             );
           })}
         </ul>
       )}
-    </Card>
+    </SectionCard>
   );
 }

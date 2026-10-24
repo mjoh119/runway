@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BalanceChart } from '@/components/balance-chart';
 import { LedgerDifferenceCard } from '@/components/ledger-difference-card';
-import { MobileTitle, PageHeader } from '@/components/page-header';
+import { PageHeader } from '@/components/page-header';
 import { RUNWAY_CHANGED_EVENT } from '@/components/log-flow/events';
 import { useLogFlow } from '@/components/log-flow/log-flow-context';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
@@ -63,23 +63,17 @@ export default function OverviewPage() {
     return () => window.removeEventListener(RUNWAY_CHANGED_EVENT, onChanged);
   }, [load]);
 
-  const logButton = (
-    <Button type="button" onClick={() => openLogFlow({ mode: 'post' })}>
-      Log
-    </Button>
-  );
-
   return (
     <>
       <PageHeader
         title="Overview"
         subtitle="How low will my account get before I'm paid again?"
-        actions={logButton}
+        actions={
+          <Button type="button" size="lg" onClick={() => openLogFlow({ mode: 'post' })}>
+            Log
+          </Button>
+        }
       />
-      <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
-        <MobileTitle title="Overview" className="mb-0" />
-        {logButton}
-      </div>
       <Body state={state} onRetry={() => void load()} />
     </>
   );
@@ -90,7 +84,7 @@ function Body({ state, onRetry }: { state: State; onRetry: () => void }) {
     return (
       <Card>
         <p role="status" className="px-(--card-spacing) text-muted-foreground">
-          Loading projection…
+          Loading projection&hellip;
         </p>
       </Card>
     );
@@ -131,67 +125,68 @@ function Body({ state, onRetry }: { state: State; onRetry: () => void }) {
   const below = warnings.belowThreshold;
   const thresholdCents = projection.settings?.lowBalanceThresholdCents ?? below?.thresholdCents ?? null;
   const payday = vm.nextPayday;
-
   const hasLedgerItems = vm.ledgerDifferenceItems.length > 0;
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-12">
-      <RunwayCallout
-        className="md:col-span-2 xl:col-span-6"
-        runway={runway}
-        isEstimated={balances[0].isEstimated}
-        horizonDays={horizonDays}
-        daysUntilPayday={vm.daysUntilPayday}
-        belowThreshold={below ?? null}
-      />
-      <StatCard
-        className="xl:col-span-3"
-        label="Available now"
-        info="What you can spend today: your ledger balance minus pending charges and deposits still on hold."
-        footer={
-          vm.ledgerNowCents !== null && (
-            <>
-              <Money cents={vm.ledgerNowCents} tone="muted" /> in ledger
-            </>
-          )
-        }
-      >
-        {vm.availableNowCents !== null ? <Money cents={vm.availableNowCents} tone="auto" /> : '—'}
-      </StatCard>
-      <StatCard className="xl:col-span-3" label="Next payday" footer={payday?.name}>
-        {payday ? (
-          <>
-            <time dateTime={payday.date}>
-              {weekdayAbbr(payday.date)} {formatMonthDay(payday.date)}
-            </time>
-            <span className="font-normal text-muted-foreground"> · </span>
-            <Money cents={payday.amountCents} showPlus tone="income" className="font-medium" />
-          </>
-        ) : (
-          <span className="text-base font-normal text-muted-foreground">None scheduled</span>
-        )}
-      </StatCard>
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+      <div className="flex min-w-0 flex-col gap-6 xl:col-span-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <RunwayCallout
+            className="md:col-span-2"
+            runway={runway}
+            isEstimated={balances[0].isEstimated}
+            horizonDays={horizonDays}
+            daysUntilPayday={vm.daysUntilPayday}
+            belowThreshold={below ?? null}
+          />
+          <div className="grid grid-cols-1 gap-6">
+            <StatCard
+              label="Available now"
+              info="What you can spend today: your ledger balance minus pending charges and deposits still on hold."
+              footer={
+                vm.ledgerNowCents !== null && (
+                  <>
+                    <Money cents={vm.ledgerNowCents} tone="muted" /> in ledger
+                  </>
+                )
+              }
+            >
+              {vm.availableNowCents !== null ? <Money cents={vm.availableNowCents} tone="auto" /> : '\u2014'}
+            </StatCard>
+            <StatCard label="Next payday" footer={payday?.name}>
+              {payday ? (
+                <>
+                  <time dateTime={payday.date}>
+                    {weekdayAbbr(payday.date)} {formatMonthDay(payday.date)}
+                  </time>
+                  <span className="font-normal text-muted-foreground"> &middot; </span>
+                  <Money cents={payday.amountCents} showPlus tone="income" className="font-medium" />
+                </>
+              ) : (
+                <span className="text-base font-normal text-muted-foreground">None scheduled</span>
+              )}
+            </StatCard>
+          </div>
+        </div>
 
-      <BalanceChart
-        className="md:col-span-2 xl:col-span-8"
-        series={chart.series}
-        boundaries={chart.boundaries}
-        runway={runway}
-        thresholdCents={thresholdCents}
-        paydayDate={payday?.date ?? null}
-      />
-      <UpcomingCard
-        groups={vm.upcomingGroups}
-        summary={vm.cycleSummary}
-        className="min-w-0 md:col-span-2 xl:col-span-4 xl:row-span-2"
-      />
-      <VarianceCard
-        variance={projection.variance ?? null}
-        className={hasLedgerItems ? 'xl:col-span-4' : 'md:col-span-2 xl:col-span-8'}
-      />
-      {hasLedgerItems && (
-        <LedgerDifferenceCard items={vm.ledgerDifferenceItems} className="xl:col-span-4" />
-      )}
+        <BalanceChart
+          series={chart.series}
+          boundaries={chart.boundaries}
+          runway={runway}
+          thresholdCents={thresholdCents}
+          paydayDate={payday?.date ?? null}
+        />
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {hasLedgerItems && <LedgerDifferenceCard items={vm.ledgerDifferenceItems} />}
+          <VarianceCard
+            variance={projection.variance ?? null}
+            className={hasLedgerItems ? undefined : 'lg:col-span-2'}
+          />
+        </div>
+      </div>
+
+      <UpcomingCard groups={vm.upcomingGroups} summary={vm.cycleSummary} className="min-w-0 xl:col-span-4" />
     </div>
   );
 }

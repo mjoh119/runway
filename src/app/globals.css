@@ -2,11 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --container-page: 80rem;
+    --color-link: var(--link);
+    --color-danger: var(--danger);
+    --color-overlay: var(--overlay);
+    --color-chart-threshold: var(--chart-threshold);
     --color-warning: var(--warning);
     --color-warning-foreground: var(--warning-foreground);
     --color-warning-border: var(--warning-border);
@@ -61,7 +66,63 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Dark is the default theme. The light palette lives under .light for a future toggle. */
 :root {
+    color-scheme: dark;
+    --background: #070b14;
+    --foreground: #e8edf6;
+    --card: #0e1524;
+    --card-foreground: #e8edf6;
+    --popover: #0e1524;
+    --popover-foreground: #e8edf6;
+    --primary: #2f6df0;
+    --primary-foreground: #ffffff;
+    --link: #7fb0ff;
+    --secondary: #172036;
+    --secondary-foreground: #cbd5e5;
+    --muted: #131c2e;
+    --muted-foreground: #9aa8bf;
+    --accent: #10264d;
+    --accent-foreground: #8ab4ff;
+    --destructive: #f87171;
+    --destructive-soft: #3a1519;
+    --danger: #ef4444;
+    --warning: #2e220c;
+    --warning-foreground: #fbbf24;
+    --warning-border: #6b4a14;
+    --success: #4ade80;
+    --info: #0f2748;
+    --info-foreground: #93c5fd;
+    --border: #1e293d;
+    --input: #2a3752;
+    --ring: #3b82f6;
+    --overlay: oklch(0 0 0 / 60%);
+    --chart-1: #3b82f6;
+    --chart-2: #93c5fd;
+    --chart-3: #4ade80;
+    --chart-4: #ef4444;
+    --chart-5: #64748b;
+    --chart-available: #3b82f6;
+    --chart-ledger: #93c5fd;
+    --chart-threshold: #ef4444;
+    --chart-threshold-band: var(--chart-threshold);
+    --chart-runway-dot: #ef4444;
+    --chart-today: #9aa8bf;
+    --chart-payday: #4ade80;
+    --chart-grid: #1a2438;
+    --radius: 0.75rem;
+    --sidebar: #0a101d;
+    --sidebar-foreground: #b4c0d4;
+    --sidebar-primary: #2f6df0;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #10264d;
+    --sidebar-accent-foreground: #8ab4ff;
+    --sidebar-border: #1a2438;
+    --sidebar-ring: #3b82f6;
+}
+
+.light {
+    color-scheme: light;
     --background: #f6f8fb;
     --foreground: #0f172a;
     --card: #ffffff;
@@ -70,6 +131,7 @@
     --popover-foreground: #0f172a;
     --primary: #1a73e8;
     --primary-foreground: #ffffff;
+    --link: #1a5fb4;
     --secondary: #f1f4f8;
     --secondary-foreground: #334155;
     --muted: #f1f4f8;
@@ -78,6 +140,7 @@
     --accent-foreground: #1a73e8;
     --destructive: #d93025;
     --destructive-soft: #fdecea;
+    --danger: #d93025;
     --warning: #fff3e0;
     --warning-foreground: #a35200;
     --warning-border: #fbd9a5;
@@ -87,6 +150,7 @@
     --border: #e4e9f0;
     --input: #e4e9f0;
     --ring: #1a73e8;
+    --overlay: oklch(0 0 0 / 40%);
     --chart-1: #1a73e8;
     --chart-2: #8ab4f8;
     --chart-3: #3f8f64;
@@ -94,12 +158,11 @@
     --chart-5: #94a3b8;
     --chart-available: #1a73e8;
     --chart-ledger: #8ab4f8;
-    --chart-threshold-band: #fbd5d1;
+    --chart-threshold: #d93025;
     --chart-runway-dot: #d93025;
     --chart-today: #7b8798;
     --chart-payday: #3f8f64;
     --chart-grid: #e8edf3;
-    --radius: 0.75rem;
     --sidebar: #ffffff;
     --sidebar-foreground: #334155;
     --sidebar-primary: #1a73e8;
@@ -109,41 +172,6 @@
     --sidebar-border: #e4e9f0;
     --sidebar-ring: #1a73e8;
 }
-
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

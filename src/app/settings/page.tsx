@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { dispatchRunwayChanged } from '@/components/log-flow/events';
-import { MobileTitle, PageHeader } from '@/components/page-header';
+import { PageHeader } from '@/components/page-header';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
 import { Button } from '@/components/ui/button';
 import { CalendarClock, Landmark, TriangleAlert } from 'lucide-react';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { SectionCard } from '@/components/ui/section-card';
 import { formatCentsPlain, parseMoney } from '@/lib/money';
 
 type LoadState = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready' };
@@ -115,12 +116,11 @@ export default function SettingsPage() {
   return (
     <>
       <PageHeader title="Settings" subtitle="Tune the low-balance warning and how far ahead Runway looks." />
-      <MobileTitle title="Settings" />
       <div className="flex flex-col gap-6">
         {loadState.kind === 'loading' && (
           <Card>
             <p role="status" className="px-(--card-spacing) text-muted-foreground">
-              Loading settings…
+              Loading settings&hellip;
             </p>
           </Card>
         )}
@@ -138,15 +138,13 @@ export default function SettingsPage() {
         )}
         {loadState.kind === 'ready' && (
           <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TriangleAlert className="size-4.5 text-muted-foreground" aria-hidden="true" />
-                  <h2 className="text-base font-semibold">Low-balance warning</h2>
-                </CardTitle>
-                <CardDescription>Get warned when your runway dips below an amount you choose.</CardDescription>
-              </CardHeader>
-              <div className="flex flex-col gap-1.5 px-(--card-spacing)">
+            <SectionCard
+              id="low-balance"
+              title="Low-balance warning"
+              description="Get warned when your runway dips below an amount you choose."
+              icon={<TriangleAlert aria-hidden="true" />}
+            >
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="threshold" className="text-sm font-medium">
                   Low-balance threshold (dollars)
                 </label>
@@ -171,17 +169,15 @@ export default function SettingsPage() {
                   </p>
                 )}
               </div>
-            </Card>
+            </SectionCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarClock className="size-4.5 text-muted-foreground" aria-hidden="true" />
-                  <h2 className="text-base font-semibold">Projection</h2>
-                </CardTitle>
-                <CardDescription>How far ahead Runway projects when no income is scheduled.</CardDescription>
-              </CardHeader>
-              <div className="flex flex-col gap-1.5 px-(--card-spacing)">
+            <SectionCard
+              id="projection"
+              title="Projection"
+              description="How far ahead Runway projects when no income is scheduled."
+              icon={<CalendarClock aria-hidden="true" />}
+            >
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="horizon" className="text-sm font-medium">
                   Projection horizon (days)
                 </label>
@@ -206,7 +202,7 @@ export default function SettingsPage() {
                   </p>
                 )}
               </div>
-            </Card>
+            </SectionCard>
 
             <Card className="lg:col-span-2">
               <div className="flex flex-wrap items-center justify-between gap-4 px-(--card-spacing)">
@@ -226,38 +222,30 @@ export default function SettingsPage() {
                   )}
                 </div>
                 <Button type="submit" size="lg" disabled={saving} className="px-5">
-                  {saving ? 'Saving…' : 'Save settings'}
+                  {saving ? 'Saving\u2026' : 'Save settings'}
                 </Button>
               </div>
             </Card>
           </form>
         )}
 
-        <section aria-label="Schedules and accounts" className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarClock className="size-4.5 text-muted-foreground" aria-hidden="true" />
-                <h2 className="text-base font-semibold">Schedules</h2>
-              </CardTitle>
-              <CardDescription>Recurring paychecks and bills.</CardDescription>
-            </CardHeader>
-            <p className="px-(--card-spacing) text-sm text-muted-foreground">
-              Editing schedules is not available yet.
-            </p>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Landmark className="size-4.5 text-muted-foreground" aria-hidden="true" />
-                <h2 className="text-base font-semibold">Accounts</h2>
-              </CardTitle>
-              <CardDescription>Balances Runway projects from.</CardDescription>
-            </CardHeader>
-            <p className="px-(--card-spacing) text-sm text-muted-foreground">
-              Editing accounts is not available yet.
-            </p>
-          </Card>
+        <section aria-label="Schedules and accounts" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <SectionCard
+            id="schedules"
+            title="Schedules"
+            description="Recurring paychecks and bills."
+            icon={<CalendarClock aria-hidden="true" />}
+          >
+            <p className="text-sm text-muted-foreground">Editing schedules is not available yet.</p>
+          </SectionCard>
+          <SectionCard
+            id="accounts"
+            title="Accounts"
+            description="Balances Runway projects from."
+            icon={<Landmark aria-hidden="true" />}
+          >
+            <p className="text-sm text-muted-foreground">Editing accounts is not available yet.</p>
+          </SectionCard>
         </section>
       </div>
     </>

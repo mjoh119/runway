@@ -33,14 +33,17 @@ export function LogFlow() {
       ref={ref}
       aria-labelledby="log-flow-title"
       onClose={closeLogFlow}
-      className="fixed inset-y-0 right-0 m-0 h-dvh max-h-none w-[min(30rem,100vw)] max-w-none overflow-y-auto rounded-none border-0 border-l border-border bg-card p-0 text-card-foreground backdrop:bg-black/40 open:animate-in open:slide-in-from-right md:rounded-l-xl"
+      className="fixed inset-y-0 right-0 m-0 h-dvh max-h-none w-full max-w-lg overflow-y-auto rounded-none border-0 border-l border-border bg-card p-0 text-card-foreground backdrop:bg-overlay open:animate-in open:slide-in-from-right md:rounded-l-xl"
     >
       {open ? (
         <div className="flex min-h-full flex-col">
-          <div className="flex items-center justify-between px-6 pt-6">
-            <h2 id="log-flow-title" className="text-xl font-semibold tracking-tight">
-              Log activity
-            </h2>
+          <div className="flex items-start justify-between px-6 pt-6">
+            <div>
+              <h2 id="log-flow-title" className="text-xl font-semibold tracking-tight">
+                Log activity
+              </h2>
+              <p className="mt-0.5 text-sm text-muted-foreground">Record a payment, purchase, or one-time entry.</p>
+            </div>
             <Button type="button" variant="ghost" size="icon" onClick={closeLogFlow} aria-label="Close">
               <X aria-hidden="true" />
             </Button>
@@ -57,7 +60,7 @@ export function LogFlow() {
                   className={cn(
                     '-mb-px border-b-2 px-2 py-2.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
                     active
-                      ? 'border-primary text-primary'
+                      ? 'border-ring text-link'
                       : 'border-transparent text-muted-foreground hover:text-foreground',
                   )}
                 >

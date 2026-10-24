@@ -1,4 +1,5 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { SectionCard } from '@/components/ui/section-card';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { formatCents } from '@/lib/format';
 import type { LedgerDifferenceItem } from '@/lib/overview-view-model';
 
@@ -6,28 +7,26 @@ import type { LedgerDifferenceItem } from '@/lib/overview-view-model';
 export function LedgerDifferenceCard({ items, className }: { items: LedgerDifferenceItem[]; className?: string }) {
   if (items.length === 0) return null;
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>
-          <h2 className="text-base font-semibold">Why available isn&apos;t the same as ledger</h2>
-        </CardTitle>
-      </CardHeader>
-      <ul className="divide-y divide-border/60 px-(--card-spacing)">
+    <SectionCard id="ledger-difference" title="Why available isn't the same as ledger" className={className} flush>
+      <ul className="divide-y divide-border border-t border-border">
         {items.map((it, i) => {
-          // text starts with the formatted amount; bold it, keep the rest muted-free prose.
+          // text starts with the formatted amount; bold it and keep the rest as prose.
           const amount = formatCents(it.amountCents);
           const rest = it.text.startsWith(amount) ? it.text.slice(amount.length) : ` ${it.text}`;
           return (
-            <li key={`${it.kind}-${it.description}-${i}`} className="flex items-center justify-between gap-3 py-2.5 text-sm">
+            <li
+              key={`${it.kind}-${it.description}-${i}`}
+              className="flex items-center justify-between gap-3 px-(--card-spacing) py-3 text-sm"
+            >
               <span>
                 <strong className="money font-semibold">{amount}</strong>
                 {rest}
               </span>
-              <span className="shrink-0 text-muted-foreground">{it.kind}</span>
+              <StatusBadge status={it.kind === 'Pending' ? 'pending' : 'on-hold'} />
             </li>
           );
         })}
       </ul>
-    </Card>
+    </SectionCard>
   );
 }

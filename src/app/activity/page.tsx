@@ -4,11 +4,15 @@ import { ClipboardList, Plus, ReceiptText, Wallet } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RUNWAY_CHANGED_EVENT } from '@/components/log-flow/events';
 import { useLogFlow } from '@/components/log-flow/log-flow-context';
-import { MobileTitle, PageHeader } from '@/components/page-header';
+import { PageHeader } from '@/components/page-header';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
 import { varianceChip } from '@/components/variance-card';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AmountCell } from '@/components/ui/amount-cell';
+import { Card } from '@/components/ui/card';
+import { GroupedList } from '@/components/ui/grouped-list';
+import { SectionCard } from '@/components/ui/section-card';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { Chip } from '@/components/ui/chip';
 import { Money } from '@/components/ui/money';
 import { StatCard } from '@/components/ui/stat-card';
@@ -127,10 +131,6 @@ export default function LogPage() {
         subtitle="Record what actually happened and see how it compares to the plan."
         actions={logButton}
       />
-      <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
-        <MobileTitle title="Log" className="mb-0" />
-        {logButton}
-      </div>
       {state.kind === 'loading' && <Placeholder text="Loading activity…" />}
       {state.kind === 'error' && (
         <Card>
@@ -183,16 +183,22 @@ function Body({
         <Money cents={purchaseTotal} />
       </StatCard>
       <StatCard className="md:col-span-2 xl:col-span-4" label="Plan vs actual" footer="Cumulative variance this cycle">
-        {chip ? <Chip variant={chip.variant} className="px-3 py-1 text-base">{chip.text}</Chip> : '—'}
+        {chip ? (
+          <Chip variant={chip.variant} className="px-3 py-1 text-base">
+            {chip.text}
+          </Chip>
+        ) : (
+          '\u2014'
+        )}
       </StatCard>
 
-      <Card className="md:col-span-2 xl:col-span-8">
-        <CardHeader>
-          <CardTitle>
-            <h2 className="text-base font-semibold">Recent activity</h2>
-          </CardTitle>
-          <CardDescription>Everything you have logged, newest first.</CardDescription>
-        </CardHeader>
+      <SectionCard
+        id="recent-activity"
+        title="Recent activity"
+        description="Everything you have logged, newest first."
+        className="md:col-span-2 xl:col-span-8"
+        flush
+      >
         {groups.length === 0 ? (
           <div className="flex flex-col items-center gap-3 px-(--card-spacing) py-10 text-center">
             <span className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
@@ -207,98 +213,80 @@ function Body({
             </Button>
           </div>
         ) : (
-          <div role="list" aria-label="Recent activity">
-            {groups.map(([date, items]) => (
-              <div key={date} role="listitem">
-                <h3 className="bg-muted px-(--card-spacing) py-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  {dayLabel(date, today)}
-                </h3>
-                <ul className="divide-y divide-border/60">
-                  {items.map((item) => (
-                    <li
-                      key={item.key}
-                      className="flex items-center justify-between gap-4 px-(--card-spacing) py-3"
-                      data-testid="activity-row"
-                    >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                          {item.kind === 'entry' ? (
-                            <ReceiptText className="size-4.5" aria-hidden="true" />
-                          ) : (
-                            <Wallet className="size-4.5" aria-hidden="true" />
-                          )}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">{item.title}</p>
-                          <p className="truncate text-xs text-muted-foreground">
-                            {item.kind === 'entry' ? 'Marked paid' : 'Purchase'} · {item.detail}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-3">
-                        {item.varianceCents !== null && item.varianceCents !== 0 && (
-                          <Chip variant={item.varianceCents < 0 ? 'overdue' : 'success'}>
-                            {item.varianceCents < 0 ? 'Over by' : 'Under by'} {formatCents(Math.abs(item.varianceCents))}
-                          </Chip>
-                        )}
-                        <Money cents={item.amountCents} showPlus tone={item.amountCents > 0 ? 'income' : 'default'} className="text-sm font-semibold" />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+          <GroupedList
+            aria-labelledby="recent-activity-heading"
+            groups={groups.map(([date, items]) => ({ key: date, label: dayLabel(date, today), items }))}
+            itemKey={(item) => item.key}
+            renderItem={(item) => (
+              <div
+                className="flex items-center justify-between gap-4 px-(--card-spacing) py-3"
+                data-testid="activity-row"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                    {item.kind === 'entry' ? (
+                      <ReceiptText className="size-4.5" aria-hidden="true" />
+                    ) : (
+                      <Wallet className="size-4.5" aria-hidden="true" />
+                    )}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{item.title}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {item.kind === 'entry' ? 'Marked paid' : 'Purchase'} &middot; {item.detail}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  {item.varianceCents !== null && item.varianceCents !== 0 && (
+                    <Chip variant={item.varianceCents < 0 ? 'overdue' : 'success'}>
+                      {item.varianceCents < 0 ? 'Over by' : 'Under by'} {formatCents(Math.abs(item.varianceCents))}
+                    </Chip>
+                  )}
+                  <AmountCell cents={item.amountCents} />
+                </div>
               </div>
-            ))}
-          </div>
+            )}
+          />
         )}
-      </Card>
+      </SectionCard>
 
       <div className="flex flex-col gap-6 md:col-span-2 xl:col-span-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <h2 className="text-base font-semibold">Quick log</h2>
-            </CardTitle>
-            <CardDescription>Choose what you want to record.</CardDescription>
-          </CardHeader>
-          <div className="flex flex-col gap-2 px-(--card-spacing)">
-            <Button type="button" size="lg" className="h-10 justify-start" onClick={() => onLog({ mode: 'post' })}>
-              Mark a bill paid
-            </Button>
-            <Button type="button" size="lg" variant="outline" className="h-10 justify-start" onClick={() => onLog({ mode: 'purchase' })}>
-              Add a purchase
-            </Button>
-            <Button type="button" size="lg" variant="outline" className="h-10 justify-start" onClick={() => onLog({ mode: 'one-off' })}>
-              Add a one-off
-            </Button>
-          </div>
-        </Card>
+        <SectionCard id="quick-log" title="Quick log" description="Choose what you want to record." bodyClassName="flex flex-col gap-2">
+          <Button type="button" size="lg" className="justify-start" onClick={() => onLog({ mode: 'post' })}>
+            Mark a bill paid
+          </Button>
+          <Button type="button" size="lg" variant="outline" className="justify-start" onClick={() => onLog({ mode: 'purchase' })}>
+            Add a purchase
+          </Button>
+          <Button type="button" size="lg" variant="outline" className="justify-start" onClick={() => onLog({ mode: 'one-off' })}>
+            Add a one-off
+          </Button>
+        </SectionCard>
 
-        <Card className="gap-0 py-0">
-          <CardHeader className="px-(--card-spacing) py-(--card-spacing)">
-            <CardTitle>
-              <h2 className="text-base font-semibold">Needs logging</h2>
-            </CardTitle>
-            <CardAction>
-              <span className="text-sm text-muted-foreground">{pending.length} shown</span>
-            </CardAction>
-          </CardHeader>
+        <SectionCard
+          id="needs-logging"
+          title="Needs logging"
+          flush
+          action={<span className="text-sm text-muted-foreground">{pending.length} shown</span>}
+        >
           {pending.length === 0 ? (
             <p className="px-(--card-spacing) pb-(--card-spacing) text-sm text-muted-foreground">
               Nothing waiting to be logged.
             </p>
           ) : (
-            <ul className="divide-y divide-border/60">
+            <ul className="divide-y divide-border border-t border-border">
               {pending.map((row) => (
                 <li key={row.id} className="flex items-center justify-between gap-3 px-(--card-spacing) py-3">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span className="truncate text-sm font-medium">{row.description}</span>
-                      {row.status === 'overdue' && <Chip variant="overdue">Overdue</Chip>}
+                      {row.status === 'overdue' && <StatusBadge status="overdue" />}
                     </div>
                     {row.dueText && <p className="text-xs text-muted-foreground">{row.dueText}</p>}
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
-                    <Money cents={row.amountCents} showPlus tone={row.amountCents > 0 ? 'income' : 'default'} className="text-sm font-semibold" />
+                    <AmountCell cents={row.amountCents} />
                     <Button
                       type="button"
                       size="sm"
@@ -313,7 +301,7 @@ function Body({
               ))}
             </ul>
           )}
-        </Card>
+        </SectionCard>
       </div>
     </div>
   );

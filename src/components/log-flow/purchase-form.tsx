@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { formatCentsPlain, parseMoney } from '@/lib/money';
-import { Field, inputClass, localToday, postJson, submitOnEnter } from './form-field';
+import { Field, FormActions, inputClass, localToday, postJson, submitOnEnter } from './form-field';
 import { useLogFlow } from './log-flow-context';
 import { purchasePrefill } from './log-flow-state';
 import { useSubmit } from './use-submit';
@@ -128,11 +127,7 @@ export function PurchaseForm() {
           {generalError}
         </p>
       ) : null}
-      <div className="flex justify-end">
-        <Button type="submit" size="lg" disabled={submitting || !envelopeId}>
-          Add purchase
-        </Button>
-      </div>
+      <FormActions disabled={submitting || !envelopeId} saveLabel="Add purchase" onCancel={closeLogFlow} />
     </form>
   );
 }

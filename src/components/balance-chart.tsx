@@ -11,7 +11,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { SectionCard } from '@/components/ui/section-card';
 import type { ChartPoint, CycleBoundary } from '@/lib/cycle-view-model';
 import { niceTicksCents } from '@/lib/chart-ticks';
 import { formatCents, formatMonthDay, formatWholeDollars } from '@/lib/format';
@@ -33,7 +34,7 @@ export interface BalanceChartProps {
 const C = {
   available: 'var(--chart-available)',
   ledger: 'var(--chart-ledger)',
-  band: 'var(--chart-threshold-band)',
+  band: 'var(--chart-threshold)',
   runway: 'var(--chart-runway-dot)',
   today: 'var(--chart-today)',
   payday: 'var(--chart-payday)',
@@ -126,12 +127,12 @@ export function BalanceChart(props: BalanceChartProps) {
   const showPayday = paydayDate != null && paydayDate !== first.date && series.some((p) => p.date === paydayDate);
 
   return (
-    <Card className={className}>
-      <CardHeader className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-        <CardTitle>
-          <h2 className="text-base font-semibold">Projected available balance</h2>
-        </CardTitle>
-        <ul aria-hidden="true" className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+    <SectionCard
+      id="balance-chart"
+      title="Projected available balance"
+      className={className}
+      action={
+        <ul aria-hidden="true" className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <LegendItem swatch={<span className="block h-0.5 w-5 rounded-full bg-chart-available" />}>
             Available balance
           </LegendItem>
@@ -139,19 +140,20 @@ export function BalanceChart(props: BalanceChartProps) {
             Ledger balance
           </LegendItem>
           {thresholdCents != null && (
-            <LegendItem swatch={<span className="block size-3 rounded-sm bg-chart-threshold-band" />}>
+            <LegendItem swatch={<span className="block size-3 rounded-sm border border-chart-threshold bg-chart-threshold/15" />}>
               Below {formatWholeDollars(thresholdCents)} threshold
             </LegendItem>
           )}
         </ul>
-      </CardHeader>
-      <figure className="px-(--card-spacing)">
+      }
+    >
+      <figure>
         <div role="img" aria-label={summary} className="h-60 w-full md:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={series} margin={{ top: 40, right: 24, bottom: 0, left: 0 }} accessibilityLayer={false}>
               <CartesianGrid vertical={false} stroke={C.grid} />
               {thresholdCents != null && (
-                <ReferenceArea y1={ticks[0]} y2={thresholdCents} fill={C.band} fillOpacity={0.55} stroke="none" ifOverflow="hidden" />
+                <ReferenceArea y1={ticks[0]} y2={thresholdCents} fill={C.band} fillOpacity={0.15} stroke="none" ifOverflow="hidden" />
               )}
               <XAxis
                 dataKey="date"
@@ -250,6 +252,6 @@ export function BalanceChart(props: BalanceChartProps) {
         </div>
         <figcaption className="sr-only">{summary}</figcaption>
       </figure>
-    </Card>
+    </SectionCard>
   );
 }
