@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Activity, LayoutDashboard, Settings, Wallet, type LucideIcon } from 'lucide-react';
+import { LogFlow } from '@/components/log-flow/log-flow';
+import { LogFlowProvider } from '@/components/log-flow/log-flow-context';
 import { ResetDemoButton } from '@/components/reset-demo-button';
 import { TodayLabel } from '@/components/today-label';
 import { cn } from '@/lib/utils';
@@ -29,6 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
+    <LogFlowProvider>
     <div className="min-h-screen md:flex">
       <aside className="sticky top-0 hidden h-screen w-50 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-3 py-6 md:flex">
         <p className="px-3 text-xl font-bold tracking-tight">Runway</p>
@@ -88,5 +91,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         })}
       </nav>
     </div>
+    <LogFlow />
+    </LogFlowProvider>
   );
 }

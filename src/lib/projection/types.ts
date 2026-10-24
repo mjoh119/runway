@@ -32,6 +32,18 @@ export interface Entry {
   holdReleaseDate?: string; // 'YYYY-MM-DD'
   isHoldEstimated?: boolean;
   description?: string;
+  /** 'YYYY-MM-DD', set when the entry is POSTED. */
+  actualDate?: string;
+}
+
+/** Remaining envelope budget applied by the engine as a debit on the primary account. */
+export interface EnvelopeCommitment {
+  envelopeId: string;
+  description: string;
+  /** Positive integer cents; the engine applies it as a debit. */
+  amountCents: number;
+  /** 'YYYY-MM-DD', applied as given, never shifted. */
+  date: string;
 }
 
 export interface ProjectionInput {
@@ -48,6 +60,9 @@ export interface ProjectionInput {
   projectionHorizonDays: number;
   /** Workspace low-balance threshold in integer cents; null/undefined when unset. */
   lowBalanceThresholdCents?: number | null;
+  /** POSTED / SKIPPED schedule occurrences; scheduleId set, postDate = original date. */
+  occurrenceRecords?: Entry[];
+  envelopeCommitments?: EnvelopeCommitment[];
 }
 
 export interface ProjectedBalance {

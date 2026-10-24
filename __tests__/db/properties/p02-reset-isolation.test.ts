@@ -23,6 +23,10 @@ describe('Property 2: Reset isolation (mocked prisma)', () => {
           schedule: vi.fn().mockResolvedValue({ count: 0 }),
           oneOffEntry: vi.fn().mockResolvedValue({ count: 0 }),
           workspace: vi.fn().mockResolvedValue({ count: 0 }),
+          submissionKey: vi.fn().mockResolvedValue({ count: 0 }),
+          occurrenceRecord: vi.fn().mockResolvedValue({ count: 0 }),
+          lineItem: vi.fn().mockResolvedValue({ count: 0 }),
+          envelope: vi.fn().mockResolvedValue({ count: 0 }),
         };
         const deleteOne = vi.fn().mockResolvedValue({});
         let n = 0;
@@ -35,6 +39,14 @@ describe('Property 2: Reset isolation (mocked prisma)', () => {
           },
           schedule: { deleteMany: deleteSpies.schedule, delete: deleteOne, create: vi.fn().mockResolvedValue({}) },
           oneOffEntry: { deleteMany: deleteSpies.oneOffEntry, delete: deleteOne, create: vi.fn().mockResolvedValue({}) },
+          submissionKey: { deleteMany: deleteSpies.submissionKey, delete: deleteOne, create: vi.fn().mockResolvedValue({}) },
+          occurrenceRecord: { deleteMany: deleteSpies.occurrenceRecord, delete: deleteOne, create: vi.fn().mockResolvedValue({}) },
+          lineItem: { deleteMany: deleteSpies.lineItem, delete: deleteOne, create: vi.fn().mockResolvedValue({}) },
+          envelope: {
+            deleteMany: deleteSpies.envelope,
+            delete: deleteOne,
+            create: vi.fn(async () => ({ id: `env-${n++}` })),
+          },
         };
         // Top-level client: any direct delete outside the transaction is a violation.
         const topDeleteMany = vi.fn();

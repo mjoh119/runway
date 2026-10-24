@@ -1,4 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
+import { postJson } from '@/components/log-flow/form-field';
+import { useLogFlow } from '@/components/log-flow/log-flow-context';
+import { useSubmit } from '@/components/log-flow/use-submit';
+import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardHeader, CardTitle } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { Money } from '@/components/ui/money';
@@ -8,23 +15,57 @@ import { cn } from '@/lib/utils';
 
 function Row({ row }: { row: UpcomingRow }) {
   const income = row.amountCents > 0;
+  const { openLogFlow } = useLogFlow();
+  // Skip posts straight away; success fires `runway:changed`, which refetches the page.
+  const { submitting, error, submit } = useSubmit();
+  const [today] = useState(() => new Date().toLocaleDateString('en-CA'));
+  const skip = () => void submit(() => postJson('/api/entries/skip', { entryRef: row.id, today }));
   return (
-    <li className="flex items-start justify-between gap-3 px-5 py-3" data-testid="upcoming-row">
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-sm font-medium">{row.description}</span>
-          {row.status === 'overdue' && <Chip variant="overdue">Overdue</Chip>}
-          {row.status === 'pending' && <Chip variant="pending">Pending</Chip>}
-          {row.shifted && <Chip variant="neutral">{row.shifted.text}</Chip>}
+    <li className="px-5 py-3" data-testid="upcoming-row">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-sm font-medium">{row.description}</span>
+            {row.status === 'overdue' && <Chip variant="overdue">Overdue</Chip>}
+            {row.status === 'pending' && <Chip variant="pending">Pending</Chip>}
+            {row.shifted && <Chip variant="neutral">{row.shifted.text}</Chip>}
+          </div>
+          {row.dueText && <p className="mt-0.5 text-xs text-muted-foreground">{row.dueText}</p>}
         </div>
-        {row.dueText && <p className="mt-0.5 text-xs text-muted-foreground">{row.dueText}</p>}
+        <Money
+          cents={row.amountCents}
+          showPlus
+          tone={income ? 'income' : 'default'}
+          className="shrink-0 text-sm font-semibold"
+        />
       </div>
-      <Money
-        cents={row.amountCents}
-        showPlus
-        tone={income ? 'income' : 'default'}
-        className="shrink-0 text-sm font-semibold"
-      />
+      <div className="mt-2 flex gap-2">
+        <Button
+          type="button"
+          size="xs"
+          variant="outline"
+          disabled={submitting}
+          aria-label={`Post ${row.description}`}
+          onClick={() => openLogFlow({ mode: 'post', entryRef: row.id })}
+        >
+          Post
+        </Button>
+        <Button
+          type="button"
+          size="xs"
+          variant="ghost"
+          disabled={submitting}
+          aria-label={`Skip ${row.description}`}
+          onClick={skip}
+        >
+          Skip
+        </Button>
+      </div>
+      {error && (
+        <p role="alert" className="mt-1 text-xs text-destructive">
+          {error}
+        </p>
+      )}
     </li>
   );
 }

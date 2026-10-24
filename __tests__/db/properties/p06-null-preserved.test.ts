@@ -85,6 +85,10 @@ describe('Property 6: Null available balance preservation (seedWorkspace mapping
       },
       schedule: { create: vi.fn() },
       oneOffEntry: { create: vi.fn() },
+      submissionKey: { deleteMany: vi.fn() },
+      occurrenceRecord: { deleteMany: vi.fn() },
+      lineItem: { deleteMany: vi.fn(), create: vi.fn() },
+      envelope: { deleteMany: vi.fn(), create: vi.fn(async () => ({ id: 'env-created' })) },
     };
     vi.mocked(mockedPrisma.$transaction).mockImplementation((async (cb: (t: typeof tx) => unknown) =>
       cb(tx)) as never);
@@ -105,6 +109,8 @@ describe('Property 6: Null available balance preservation (seedWorkspace mapping
           })),
           schedules: [],
           oneOffEntries: [],
+          envelopes: [],
+          lineItems: [],
           workspaceSettings: { lowBalanceThresholdCents: 0, projectionHorizonDays: 30 },
         } as never);
 

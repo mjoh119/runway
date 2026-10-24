@@ -4,9 +4,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { BalanceChart } from '@/components/balance-chart';
 import { LedgerDifferenceCard } from '@/components/ledger-difference-card';
 import { MobileTitle, PageHeader } from '@/components/page-header';
+import { RUNWAY_CHANGED_EVENT } from '@/components/log-flow/events';
+import { useLogFlow } from '@/components/log-flow/log-flow-context';
 import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
 import { RunwayCallout } from '@/components/runway-callout';
 import { UpcomingCard } from '@/components/upcoming-card';
+import { VarianceCard } from '@/components/variance-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Money } from '@/components/ui/money';
@@ -25,8 +28,10 @@ type State =
 export default function OverviewPage() {
   const [state, setState] = useState<State>({ kind: 'loading' });
 
-  const load = useCallback(async () => {
-    setState({ kind: 'loading' });
+  const { openLogFlow } = useLogFlow();
+
+  const load = useCallback(async (silent = false) => {
+    if (!silent) setState({ kind: 'loading' });
     try {
       // Visitor's local calendar date. Never toISOString(): it converts to UTC.
       const today = new Date().toLocaleDateString('en-CA');
@@ -50,11 +55,32 @@ export default function OverviewPage() {
     return () => window.removeEventListener(DEMO_RESET_EVENT, onReset);
   }, [load]);
 
+  // Log_Flow fires this after a successful post, skip, one-off or purchase. Refetch quietly
+  // so the page does not flash its loading state.
+  useEffect(() => {
+    const onChanged = () => void load(true);
+    window.addEventListener(RUNWAY_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(RUNWAY_CHANGED_EVENT, onChanged);
+  }, [load]);
+
+  const logButton = (
+    <Button type="button" onClick={() => openLogFlow({ mode: 'post' })}>
+      Log
+    </Button>
+  );
+
   return (
     <>
-      <PageHeader title="Overview" subtitle="How low will my account get before I'm paid again?" />
-      <MobileTitle title="Overview" />
-      <Body state={state} onRetry={load} />
+      <PageHeader
+        title="Overview"
+        subtitle="How low will my account get before I'm paid again?"
+        actions={logButton}
+      />
+      <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
+        <MobileTitle title="Overview" className="mb-0" />
+        {logButton}
+      </div>
+      <Body state={state} onRetry={() => void load()} />
     </>
   );
 }
@@ -153,6 +179,7 @@ function Body({ state, onRetry }: { state: State; onRetry: () => void }) {
           paydayDate={payday?.date ?? null}
         />
         <LedgerDifferenceCard items={vm.ledgerDifferenceItems} />
+        <VarianceCard variance={projection.variance ?? null} />
       </div>
       <UpcomingCard groups={vm.upcomingGroups} summary={vm.cycleSummary} className="min-w-0 xl:h-full" />
     </div>

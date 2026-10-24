@@ -142,3 +142,222 @@ Three corrections to the steering files: (1) holidays.ts does a network fetch in
 ```
 
 ---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:18:50.143Z
+
+(no changes — working tree clean)
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:21:13.208Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:25:58.506Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:27:44.240Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:30:55.781Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:31:54.372Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:42:18.406Z
+
+```text
+M .kiro/specs/projection-engine-cycle-view/tasks.meta.json
+ M __tests__/projection/demo-exact.test.ts
+ M docs/ai-collaboration/session-log.md
+ M src/app/layout.tsx
+ M src/app/page.tsx
+ M src/components/balance-chart.tsx
+ M src/components/entry-timeline.tsx
+ M src/components/runway-callout.tsx
+ M src/lib/holidays/generator.ts
+ M src/lib/projection/dates.ts
+ M src/sources/fake-source.ts
+?? __tests__/chart-ticks.test.ts
+?? __tests__/holidays/names.test.ts
+?? src/lib/chart-ticks.ts
+?? src/lib/holidays/names.ts
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T03:43:10.815Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:02:13.089Z
+
+```text
+M .kiro/specs/projection-engine-cycle-view/tasks.meta.json
+ M __tests__/format.test.ts
+ M __tests__/projection/demo-exact.test.ts
+ M docs/ai-collaboration/session-log.md
+ M src/app/api/projection/route.ts
+ M src/app/globals.css
+ M src/app/layout.tsx
+ M src/app/page.tsx
+ M src/components/balance-chart.tsx
+ D src/components/balance-difference.tsx
+ D src/components/entry-timeline.tsx
+ D src/components/low-balance-warning.tsx
+ M src/components/reset-demo-button.tsx
+ M src/components/runway-callout.tsx
+ M src/components/ui/card.tsx
+ M src/lib/format.ts
+ M src/lib/projection/types.ts
+ M src/lib/projection/warnings.ts
+ M src/sources/fake-source.ts
+?? __tests__/overview-view-model.test.ts
+?? src/app/activity/
+?? src/app/envelopes/
+?? src/app/settings/
+?? src/components/app-shell.tsx
+?? src/components/coming-soon.tsx
+?? src/components/ledger-difference-card.tsx
+?? src/components/page-header.tsx
+?? src/components/today-label.tsx
+?? src/components/ui/chip.tsx
+?? src/components/ui/money.tsx
+?? src/components/ui/stat-card.tsx
+?? src/components/upcoming-card.tsx
+?? src/lib/overview-view-model.ts
+?? src/lib/projection-response.ts
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:02:53.482Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:09:02.451Z
+
+```text
+M docs/ai-collaboration/session-log.md
+?? .kiro/specs/plan-vs-actual-envelopes/
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:19:12.306Z
+
+```text
+M docs/ai-collaboration/session-log.md
+?? .kiro/specs/plan-vs-actual-envelopes/
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:21:51.690Z
+
+```text
+M docs/ai-collaboration/session-log.md
+?? .kiro/specs/plan-vs-actual-envelopes/
+```
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T04:56:10.744Z
+
+```text
+M __tests__/db/properties/p02-reset-isolation.test.ts
+ M __tests__/db/properties/p06-null-preserved.test.ts
+ M docs/ai-collaboration/session-log.md
+ M prisma/schema.prisma
+ M src/app/api/projection/route.ts
+ M src/app/envelopes/page.tsx
+ M src/app/page.tsx
+ M src/app/settings/page.tsx
+ M src/components/app-shell.tsx
+ M src/components/page-header.tsx
+ M src/components/upcoming-card.tsx
+ M src/lib/projection-response.ts
+ M src/lib/projection/dates.ts
+ M src/lib/projection/engine.ts
+ M src/lib/projection/types.ts
+ M src/lib/seed-workspace.ts
+ M src/sources/fake-source.ts
+?? .kiro/specs/plan-vs-actual-envelopes/
+?? __tests__/api-response.test.ts
+?? __tests__/architecture.test.ts
+?? __tests__/db/entry-service.test.ts
+?? __tests__/db/reset-envelopes.test.ts
+?? __tests__/entry-service/
+?? __tests__/envelopes/
+?? __tests__/log-flow-helpers.test.ts
+?? __tests__/log-flow-state.test.ts
+?? __tests__/money.test.ts
+?? __tests__/projection/records-commitments.test.ts
+?? __tests__/projection/variance.test.ts
+?? __tests__/sources/fake-source-envelopes.test.ts
+?? prisma/migrations/20261024000000_plan_vs_actual_envelopes/
+?? src/app/api/entries/
+?? src/app/api/envelopes/
+?? src/app/api/line-items/
+?? src/app/api/settings/
+?? src/components/envelope-card.tsx
+?? src/components/envelope-form.tsx
+?? src/components/log-flow/
+?? src/components/variance-card.tsx
+?? src/lib/api-response.ts
+?? src/lib/entry-route.ts
+?? src/lib/entry-service/
+?? src/lib/envelopes/
+?? src/lib/money.ts
+?? src/lib/projection-service.ts
+?? src/lib/projection/variance.ts
+```
+
+---

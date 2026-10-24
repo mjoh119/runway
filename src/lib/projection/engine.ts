@@ -319,9 +319,20 @@ export function projectCashFlow(input: ProjectionInput): ProjectionOutput {
   // Schedule entries (on/after currentDate) over a wide window, plus one-offs with
   // shifted dates recomputed. One-offs before currentDate are kept (overdue, holds).
   const wideEnd = addDays(currentDate, GENERATION_SPAN_DAYS);
+  const records = input.occurrenceRecords ?? [];
+  const recordKeys = new Set(records.map((r) => `${r.scheduleId}|${r.postDate}`));
   const candidates: Entry[] = [];
   for (const s of schedules) {
-    candidates.push(...generateEntries(s, currentDate, wideEnd, holidays));
+    for (const g of generateEntries(s, currentDate, wideEnd, holidays)) {
+      if (!recordKeys.has(`${g.scheduleId}|${g.postDate}`)) candidates.push(g);
+    }
+  }
+  for (const r of records) {
+    candidates.push({
+      ...r,
+      id: `${r.scheduleId}:${r.postDate}`,
+      shiftedPostDate: shiftDate(r.postDate, r.entryType, holidays),
+    });
   }
   for (const e of oneOffEntries) {
     candidates.push({ ...e, shiftedPostDate: shiftDate(e.postDate, e.entryType, holidays) });
@@ -374,10 +385,24 @@ export function projectCashFlow(input: ProjectionInput): ProjectionOutput {
     };
   }
 
+  // Commitments feed the balance projection only: never entries, cycles or warnings.
+  const commitmentEntries: Entry[] = (input.envelopeCommitments ?? []).map((c) => ({
+    id: `commitment:${c.envelopeId}`,
+    accountId: primary.id,
+    scheduleId: null,
+    postDate: c.date,
+    shiftedPostDate: c.date,
+    estimatedAmountCents: -Math.abs(c.amountCents),
+    actualAmountCents: null,
+    status: 'PLANNED',
+    entryType: 'DEBIT',
+    description: c.description,
+  }));
+
   const balances = projectBalances(
     primary.ledgerBalanceCents,
     primary.availableBalanceCents,
-    scoped,
+    commitmentEntries.length > 0 ? [...scoped, ...commitmentEntries] : scoped,
     currentDate,
     projectionEndDate,
   );

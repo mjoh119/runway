@@ -26,6 +26,16 @@ function pad(n: number, width: number): string {
   return String(n).padStart(width, '0');
 }
 
+/** True when `value` is a real calendar date in 'YYYY-MM-DD' form. */
+export function isValidDate(value: string): boolean {
+  try {
+    parse(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Returns the date n days after (or before, if negative) the given date. */
 export function addDays(date: string, n: number): string {
   const d = new Date(parse(date) + n * 86_400_000);

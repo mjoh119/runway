@@ -10,8 +10,9 @@ function toUtcDate(dateStr: string): Date {
 /**
  * Write the demo data for `today` ('YYYY-MM-DD') into one workspace.
  * Runs in a single transaction (rolls back on any error). Creates the
- * workspace row if missing and replaces any existing accounts, schedules and
- * entries of that workspace only, so it doubles as "Reset demo".
+ * workspace row if missing and replaces any existing accounts, schedules,
+ * entries, envelopes, line items, occurrence records and submission keys of
+ * that workspace only, so it doubles as "Reset demo".
  */
 export async function seedWorkspace(workspaceId: string, today: string): Promise<void> {
   const demo = generateDemoData(today)
@@ -36,7 +37,12 @@ export async function seedWorkspace(workspaceId: string, today: string): Promise
       },
     })
 
-    // Accounts cascade-delete their schedules and entries.
+    // Clear Spec 2 rows first (explicit, workspace-scoped), then accounts,
+    // which cascade-delete their schedules and entries.
+    await tx.submissionKey.deleteMany({ where: { workspaceId } })
+    await tx.occurrenceRecord.deleteMany({ where: { workspaceId } })
+    await tx.lineItem.deleteMany({ where: { workspaceId } })
+    await tx.envelope.deleteMany({ where: { workspaceId } })
     await tx.account.deleteMany({ where: { workspaceId } })
 
     const accountIds = new Map<string, string>() // demo id -> created id
@@ -89,6 +95,34 @@ export async function seedWorkspace(workspaceId: string, today: string): Promise
           holdReleaseDate: e.holdReleaseDate ? toUtcDate(e.holdReleaseDate) : null,
           isHoldEstimated: e.isHoldEstimated ?? false,
           description: e.description ?? null,
+        },
+      })
+    }
+
+    const envelopeIds = new Map<string, string>() // demo id -> created id
+    for (const env of demo.envelopes) {
+      const created = await tx.envelope.create({
+        data: {
+          workspaceId,
+          name: env.name,
+          nameKey: env.name.trim().toLowerCase(),
+          budgetCents: env.budgetCents,
+          resetPeriod: env.resetPeriod,
+        },
+      })
+      envelopeIds.set(env.id, created.id)
+    }
+
+    for (const li of demo.lineItems) {
+      const envelopeId = envelopeIds.get(li.envelopeId)
+      if (!envelopeId) throw new Error(`Unknown demo envelope id: ${li.envelopeId}`)
+      await tx.lineItem.create({
+        data: {
+          workspaceId,
+          envelopeId,
+          amountCents: li.amountCents,
+          purchaseDate: toUtcDate(li.purchaseDate),
+          description: li.description,
         },
       })
     }

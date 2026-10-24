@@ -1,11 +1,28 @@
 import { addDays, dayOfWeek } from '../lib/projection/dates';
+import type { ResetPeriod } from '../lib/envelopes/types';
 import type { Entry, Schedule } from '../lib/projection/types';
 import type { Account, AccountDataSource, Transaction } from './interface';
+
+export interface DemoEnvelope {
+  id: string;
+  name: string;
+  resetPeriod: ResetPeriod;
+  budgetCents: number;
+}
+
+export interface DemoLineItem {
+  envelopeId: string;
+  amountCents: number;
+  purchaseDate: string;
+  description: string;
+}
 
 export interface DemoData {
   accounts: Account[];
   schedules: Schedule[];
   oneOffEntries: Entry[];
+  envelopes: DemoEnvelope[];
+  lineItems: DemoLineItem[];
   workspaceSettings: {
     lowBalanceThresholdCents: number;
     projectionHorizonDays: number;
@@ -172,6 +189,47 @@ export function generateDemoData(currentDateStr: string): DemoData {
         status: 'PENDING',
         entryType: 'DEBIT',
         description: 'Grocery store',
+      },
+    ],
+
+    envelopes: [
+      { id: 'envelope-groceries', name: 'Groceries', resetPeriod: 'WEEKLY', budgetCents: 6_000 },
+      { id: 'envelope-dining', name: 'Dining out', resetPeriod: 'EACH_PAY_CYCLE', budgetCents: 4_500 },
+      { id: 'envelope-fun', name: 'Fun money', resetPeriod: 'MONTHLY', budgetCents: 4_000 },
+    ],
+
+    // Today is always in the current period of every envelope. today - 7 is always in the
+    // previous week, and the last day of the previous month is always in the previous month.
+    lineItems: [
+      {
+        envelopeId: 'envelope-groceries',
+        amountCents: 4_100,
+        purchaseDate: currentDateStr,
+        description: 'Weekly shop',
+      },
+      {
+        envelopeId: 'envelope-groceries',
+        amountCents: 5_500,
+        purchaseDate: addDays(currentDateStr, -7),
+        description: 'Last week shop',
+      },
+      {
+        envelopeId: 'envelope-dining',
+        amountCents: 1_840,
+        purchaseDate: currentDateStr,
+        description: 'Lunch out',
+      },
+      {
+        envelopeId: 'envelope-fun',
+        amountCents: 1_299,
+        purchaseDate: currentDateStr,
+        description: 'Movie rental',
+      },
+      {
+        envelopeId: 'envelope-fun',
+        amountCents: 3_500,
+        purchaseDate: addDays(`${currentDateStr.slice(0, 8)}01`, -1),
+        description: 'Concert tickets',
       },
     ],
 

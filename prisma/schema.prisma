@@ -18,9 +18,13 @@ model Workspace {
   lowBalanceThresholdCents Int?
   projectionHorizonDays    Int  @default(30)
 
-  accounts      Account[]
-  schedules     Schedule[]
-  oneOffEntries OneOffEntry[]
+  accounts          Account[]
+  schedules         Schedule[]
+  oneOffEntries     OneOffEntry[]
+  envelopes         Envelope[]
+  lineItems         LineItem[]
+  occurrenceRecords OccurrenceRecord[]
+  submissionKeys    SubmissionKey[]
 
   @@index([lastActivity]) // for cleanup of inactive workspaces
 }
@@ -41,8 +45,9 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  schedules     Schedule[]
-  oneOffEntries OneOffEntry[]
+  schedules         Schedule[]
+  oneOffEntries     OneOffEntry[]
+  occurrenceRecords OccurrenceRecord[]
 
   @@unique([workspaceId, name])
   @@index([workspaceId, isPrimary])
@@ -73,8 +78,9 @@ model Schedule {
 
   entryType EntryType // INCOME or DEBIT
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  occurrenceRecords OccurrenceRecord[]
 
   @@index([workspaceId, accountId])
 }
@@ -113,6 +119,8 @@ model OneOffEntry {
 
   description String?
 
+  actualDate DateTime? @db.Date // date the actual settled; null for rows created before this spec
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -125,4 +133,85 @@ enum EntryStatus {
   PENDING // seen by source but not posted
   POSTED // settled
   SKIPPED // user excluded
+}
+
+enum ResetPeriod {
+  EACH_PAY_CYCLE
+  WEEKLY
+  MONTHLY
+}
+
+model Envelope {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  name        String
+  nameKey     String // trimmed + lower-cased name, for case-insensitive uniqueness
+  budgetCents Int
+  resetPeriod ResetPeriod
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lineItems LineItem[]
+
+  @@unique([workspaceId, nameKey])
+  @@index([workspaceId])
+}
+
+model LineItem {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  envelopeId String
+  envelope   Envelope @relation(fields: [envelopeId], references: [id], onDelete: Cascade)
+
+  amountCents  Int // positive magnitude of the purchase
+  purchaseDate DateTime @db.Date
+  description  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId, envelopeId, purchaseDate])
+}
+
+model OccurrenceRecord {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  scheduleId String
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  accountId  String
+  account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  occurrenceDate DateTime    @db.Date // original, unshifted post date of the occurrence
+  entryType      EntryType
+  status         EntryStatus // POSTED or SKIPPED only (enforced by the executor)
+  description    String?
+
+  estimatedAmountCents Int
+  actualAmountCents    Int?
+  actualDate           DateTime? @db.Date
+
+  createdAt DateTime @default(now())
+
+  @@unique([workspaceId, scheduleId, occurrenceDate])
+  @@index([workspaceId, status])
+}
+
+model SubmissionKey {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  key       String
+  kind      String // 'POST' | 'ONE_OFF' | 'PURCHASE'
+  result    Json? // original response, replayed for duplicates
+  createdAt DateTime @default(now())
+
+  @@unique([workspaceId, key])
 }
