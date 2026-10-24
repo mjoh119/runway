@@ -1,7 +1,7 @@
 // Warnings for the cycle view. Pure: no I/O, no side effects.
 
 import { formatMonthDay, formatWholeDollars } from '../format';
-import type { Entry, ProjectionOutput, RunwayResult } from './types';
+import type { BalanceDifferenceItem, Entry, ProjectionOutput, RunwayResult } from './types';
 
 export interface BuildWarningsInput {
   runway: RunwayResult | null;
@@ -77,6 +77,33 @@ export function explainBalanceDifference(
   return `${formatWholeDollars(gap)} difference between ledger and available balance`;
 }
 
+/**
+ * The individual items behind the ledger/available gap: pending debits first (entry order),
+ * then posted deposits still on hold, ordered by release date. Same selection as
+ * explainBalanceDifference.
+ */
+export function listBalanceDifferenceItems(entries: Entry[], startDate: string): BalanceDifferenceItem[] {
+  const pending: BalanceDifferenceItem[] = entries
+    .filter((e) => e.status === 'PENDING' && e.entryType === 'DEBIT')
+    .map((e) => ({ description: e.description ?? 'Pending debit', amountCents: amountOf(e), kind: 'Pending' }));
+  const held: BalanceDifferenceItem[] = entries
+    .filter(
+      (e) =>
+        e.status === 'POSTED' &&
+        e.entryType === 'INCOME' &&
+        e.holdReleaseDate !== undefined &&
+        e.holdReleaseDate > startDate,
+    )
+    .map((e) => ({
+      description: e.description ?? 'Deposit',
+      amountCents: amountOf(e),
+      kind: 'On hold' as const,
+      holdReleaseDate: e.holdReleaseDate,
+    }))
+    .sort((a, b) => (a.holdReleaseDate! < b.holdReleaseDate! ? -1 : a.holdReleaseDate! > b.holdReleaseDate! ? 1 : 0));
+  return [...pending, ...held];
+}
+
 /** Requirements 10.1, 10.2, 10.4, 12.2, 13.4. */
 export function buildWarnings(input: BuildWarningsInput): Warnings {
   const { runway, thresholdCents, entries, startDate, startingLedgerCents, startingAvailableCents } = input;
@@ -98,7 +125,7 @@ export function buildWarnings(input: BuildWarningsInput): Warnings {
   if (overdue.length > 0) warnings.overdueEntries = overdue;
 
   const reason = explainBalanceDifference(entries, startDate, startingLedgerCents, startingAvailableCents);
-  if (reason !== undefined) warnings.availableBalanceDifference = { reason };
+  if (reason !== undefined) warnings.availableBalanceDifference = { reason, items: listBalanceDifferenceItems(entries, startDate) };
 
   return warnings;
 }

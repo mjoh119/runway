@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCents, formatMonthDay, formatWholeDollars } from '@/lib/format';
+import { formatCents, formatMonthDay, formatSignedCents, formatWholeDollars } from '@/lib/format';
 
 describe('formatCents', () => {
   it('formats zero', () => {
@@ -57,5 +57,17 @@ describe('formatMonthDay', () => {
   it('rejects malformed dates and invalid months', () => {
     expect(() => formatMonthDay('3/12/2026')).toThrow();
     expect(() => formatMonthDay('2026-13-01')).toThrow();
+  });
+});
+
+describe('formatSignedCents', () => {
+  it('uses a real minus sign for negatives', () => {
+    expect(formatSignedCents(-7500)).toBe('\u2212$75.00');
+    expect(formatSignedCents(-7500, true)).toBe('\u2212$75.00');
+  });
+  it('adds a plus only when asked and non-zero', () => {
+    expect(formatSignedCents(240000, true)).toBe('+$2,400.00');
+    expect(formatSignedCents(240000)).toBe('$2,400.00');
+    expect(formatSignedCents(0, true)).toBe('$0.00');
   });
 });

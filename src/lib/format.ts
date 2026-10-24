@@ -72,3 +72,14 @@ export function formatMonthDay(date: string): string {
   }
   return `${MONTH_NAMES[month - 1]} ${day}`;
 }
+
+/**
+ * Format integer cents with an explicit sign for display lists, using a real minus
+ * sign (U+2212): -7500 -> "−$75.00"; with `showPlus`, 240000 -> "+$2,400.00".
+ * Zero never gets a sign.
+ */
+export function formatSignedCents(cents: number, showPlus = false): string {
+  const body = formatCents(Math.abs(cents));
+  if (cents < 0) return `\u2212${body}`;
+  return showPlus && cents > 0 ? `+${body}` : body;
+}

@@ -2,33 +2,49 @@
 
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
+  ReferenceArea,
   ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
   XAxis,
   YAxis,
 } from 'recharts';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ChartPoint, CycleBoundary } from '@/lib/cycle-view-model';
 import { niceTicksCents } from '@/lib/chart-ticks';
 import { formatCents, formatMonthDay, formatWholeDollars } from '@/lib/format';
+import { weekdayAbbr } from '@/lib/projection/dates';
 import type { RunwayResult } from '@/lib/projection/types';
 
 export interface BalanceChartProps {
   series: ChartPoint[];
   boundaries: CycleBoundary[];
   runway: RunwayResult | null;
+  /** Workspace low-balance threshold (integer cents); null/undefined hides the band. */
+  thresholdCents?: number | null;
+  /** Shifted date of the next payday; drawn as a reference line when inside the series. */
+  paydayDate?: string | null;
+  className?: string;
 }
 
-const AVAILABLE_COLOR = '#2563eb';
-const LEDGER_COLOR = '#f97316';
-const BOUNDARY_COLOR = '#64748b';
-const RUNWAY_COLOR = '#dc2626';
+// All colors come from CSS variable tokens in globals.css.
+const C = {
+  available: 'var(--chart-available)',
+  ledger: 'var(--chart-ledger)',
+  band: 'var(--chart-threshold-band)',
+  runway: 'var(--chart-runway-dot)',
+  today: 'var(--chart-today)',
+  payday: 'var(--chart-payday)',
+  grid: 'var(--chart-grid)',
+  text: 'var(--muted-foreground)',
+  strong: 'var(--foreground)',
+  card: 'var(--card)',
+} as const;
 
 /** Plain-text description of the chart for assistive tech (Requirements 13.1, 9.2). */
-export function describeChart({ series, boundaries, runway }: BalanceChartProps): string {
+export function describeChart({ series, boundaries, runway, thresholdCents }: BalanceChartProps): string {
   if (series.length === 0) return 'No balance data to chart.';
 
   const first = series[0];
@@ -48,75 +64,192 @@ export function describeChart({ series, boundaries, runway }: BalanceChartProps)
   if (boundaries.length > 0) {
     parts.push(`Pay cycles start on ${boundaries.map((b) => formatMonthDay(b.date)).join(', ')}.`);
   }
-  parts.push('Ledger balance is shown as a dashed orange line.');
+  if (thresholdCents != null) {
+    parts.push(`The shaded band marks balances below your ${formatCents(thresholdCents)} threshold.`);
+  }
+  parts.push('Ledger balance is shown as a dashed light-blue line.');
   return parts.join(' ');
 }
 
+/** Two-line label above a vertical reference line: name, then date. */
+function lineLabel(name: string, date: string, color: string) {
+  function LineLabel({ viewBox }: { viewBox?: { x?: number; y?: number } }) {
+    const x = (viewBox?.x ?? 0) + 6;
+    const y = viewBox?.y ?? 0;
+    return (
+      <g>
+        <text x={x} y={y - 24} fontSize={12} fontWeight={600} fill={color}>
+          {name}
+        </text>
+        <text x={x} y={y - 10} fontSize={11} fill={C.text}>
+          {formatMonthDay(date)}
+        </text>
+      </g>
+    );
+  }
+  return LineLabel;
+}
+
+interface DotShapeProps {
+  cx?: number;
+  cy?: number;
+}
+
+function LegendItem({ swatch, children }: { swatch: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <li className="flex items-center gap-2">
+      {swatch}
+      <span>{children}</span>
+    </li>
+  );
+}
+
 export function BalanceChart(props: BalanceChartProps) {
-  const { series, boundaries, runway } = props;
+  const { series, runway, thresholdCents = null, paydayDate = null, className } = props;
   const summary = describeChart(props);
 
   if (series.length === 0) {
-    return <p className="text-muted-foreground">{summary}</p>;
+    return (
+      <Card className={className}>
+        <p className="px-(--card-spacing) text-muted-foreground">{summary}</p>
+      </Card>
+    );
   }
 
   const values = series.flatMap((p) => [p.availableCents, p.ledgerCents]);
+  if (thresholdCents != null) values.push(thresholdCents);
   const ticks = niceTicksCents(Math.min(...values), Math.max(...values));
-  const runwayPoint = runway ? series.find((p) => p.date === runway.lowestBalanceDate) : undefined;
+  const first = series[0];
+  const runwayIndex = runway ? series.findIndex((p) => p.date === runway.lowestBalanceDate) : -1;
+  const runwayPoint = runwayIndex >= 0 ? series[runwayIndex] : undefined;
+  const labelOnLeft = runwayIndex > series.length * 0.6;
+  const showPayday = paydayDate != null && paydayDate !== first.date && series.some((p) => p.date === paydayDate);
 
   return (
-    <figure className="space-y-2">
-      <div role="img" aria-label={summary} className="h-72 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={series} margin={{ top: 12, right: 16, bottom: 4, left: 8 }} accessibilityLayer={false}>
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
-            <XAxis dataKey="date" tickFormatter={formatMonthDay} minTickGap={24} />
-            <YAxis tickFormatter={formatWholeDollars} width={64} ticks={ticks} domain={[ticks[0], ticks[ticks.length - 1]]} />
-            <Legend verticalAlign="top" height={28} />
-            <Line
-              type="stepAfter"
-              dataKey="ledgerCents"
-              name="Ledger"
-              stroke={LEDGER_COLOR}
-              strokeWidth={2}
-              strokeDasharray="6 4"
-              strokeOpacity={0.9}
-              dot={false}
-              isAnimationActive={false}
-            />
-            <Line
-              type="stepAfter"
-              dataKey="availableCents"
-              name="Available"
-              stroke={AVAILABLE_COLOR}
-              strokeWidth={3}
-              dot={false}
-              isAnimationActive={false}
-            />
-            {boundaries.map((b) => (
-              <ReferenceLine
-                key={b.date}
-                x={b.date}
-                stroke={BOUNDARY_COLOR}
-                strokeDasharray="2 4"
-                label={{ value: 'Payday', position: 'insideTopRight', fontSize: 11 }}
+    <Card className={className}>
+      <CardHeader className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <CardTitle>
+          <h2 className="text-base font-semibold">Projected available balance</h2>
+        </CardTitle>
+        <ul aria-hidden="true" className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <LegendItem swatch={<span className="block h-0.5 w-5 rounded-full bg-chart-available" />}>
+            Available balance
+          </LegendItem>
+          <LegendItem swatch={<span className="block w-5 border-t-2 border-dashed border-chart-ledger" />}>
+            Ledger balance
+          </LegendItem>
+          {thresholdCents != null && (
+            <LegendItem swatch={<span className="block size-3 rounded-sm bg-chart-threshold-band" />}>
+              Below {formatWholeDollars(thresholdCents)} threshold
+            </LegendItem>
+          )}
+        </ul>
+      </CardHeader>
+      <figure className="px-(--card-spacing)">
+        <div role="img" aria-label={summary} className="h-60 w-full md:h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={series} margin={{ top: 40, right: 24, bottom: 0, left: 0 }} accessibilityLayer={false}>
+              <CartesianGrid vertical={false} stroke={C.grid} />
+              {thresholdCents != null && (
+                <ReferenceArea y1={ticks[0]} y2={thresholdCents} fill={C.band} fillOpacity={0.55} stroke="none" ifOverflow="hidden" />
+              )}
+              <XAxis
+                dataKey="date"
+                tickFormatter={formatMonthDay}
+                minTickGap={28}
+                tickLine={false}
+                axisLine={false}
+                tick={{ fontSize: 12, fill: C.text }}
+                tickMargin={8}
               />
-            ))}
-            {runway && runwayPoint && (
+              <YAxis
+                tickFormatter={formatWholeDollars}
+                width={52}
+                ticks={ticks}
+                domain={[ticks[0], ticks[ticks.length - 1]]}
+                tickLine={false}
+                axisLine={false}
+                tick={{ fontSize: 12, fill: C.text }}
+              />
+              <ReferenceLine
+                x={first.date}
+                stroke={C.today}
+                strokeDasharray="4 4"
+                label={lineLabel('Today', first.date, C.today)}
+              />
+              {showPayday && (
+                <ReferenceLine
+                  x={paydayDate}
+                  stroke={C.payday}
+                  strokeDasharray="4 4"
+                  label={lineLabel('Payday', paydayDate, C.payday)}
+                />
+              )}
+              <Line
+                type="stepAfter"
+                dataKey="availableCents"
+                name="Available balance"
+                stroke={C.available}
+                strokeWidth={2.5}
+                dot={false}
+                isAnimationActive={false}
+              />
+              {/* Drawn after available so the dashes stay visible where the lines overlap. */}
+              <Line
+                type="stepAfter"
+                dataKey="ledgerCents"
+                name="Ledger balance"
+                stroke={C.ledger}
+                strokeWidth={2}
+                strokeDasharray="6 4"
+                dot={false}
+                isAnimationActive={false}
+              />
               <ReferenceDot
-                x={runway.lowestBalanceDate}
-                y={runwayPoint.availableCents}
-                r={6}
-                fill={RUNWAY_COLOR}
-                stroke="#ffffff"
+                x={first.date}
+                y={first.availableCents}
+                r={4.5}
+                fill={C.available}
+                stroke={C.card}
                 strokeWidth={2}
                 ifOverflow="extendDomain"
               />
-            )}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-      <figcaption className="text-sm text-muted-foreground">{summary}</figcaption>
-    </figure>
+              {runway && runwayPoint && (
+                <ReferenceDot
+                  x={runway.lowestBalanceDate}
+                  y={runwayPoint.availableCents}
+                  ifOverflow="extendDomain"
+                  shape={({ cx = 0, cy = 0 }: DotShapeProps) => (
+                    <g>
+                      <circle cx={cx} cy={cy} r={6} fill={C.runway} stroke={C.card} strokeWidth={2} />
+                      <text
+                        x={cx + (labelOnLeft ? -12 : 12)}
+                        y={cy - 2}
+                        textAnchor={labelOnLeft ? 'end' : 'start'}
+                        fontSize={13}
+                        fontWeight={700}
+                        fill={C.strong}
+                      >
+                        {formatCents(runway.lowestBalanceCents)}
+                      </text>
+                      <text
+                        x={cx + (labelOnLeft ? -12 : 12)}
+                        y={cy + 13}
+                        textAnchor={labelOnLeft ? 'end' : 'start'}
+                        fontSize={11}
+                        fill={C.text}
+                      >
+                        {`${weekdayAbbr(runway.lowestBalanceDate)}, ${formatMonthDay(runway.lowestBalanceDate)}`}
+                      </text>
+                    </g>
+                  )}
+                />
+              )}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <figcaption className="sr-only">{summary}</figcaption>
+      </figure>
+    </Card>
   );
 }

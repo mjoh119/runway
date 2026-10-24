@@ -2,22 +2,27 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { BalanceChart } from '@/components/balance-chart';
-import { BalanceDifference } from '@/components/balance-difference';
-import { EntryTimeline } from '@/components/entry-timeline';
-import { LowBalanceWarning } from '@/components/low-balance-warning';
-import { ResetDemoButton } from '@/components/reset-demo-button';
+import { LedgerDifferenceCard } from '@/components/ledger-difference-card';
+import { MobileTitle, PageHeader } from '@/components/page-header';
+import { DEMO_RESET_EVENT } from '@/components/reset-demo-button';
 import { RunwayCallout } from '@/components/runway-callout';
+import { UpcomingCard } from '@/components/upcoming-card';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Money } from '@/components/ui/money';
+import { StatCard } from '@/components/ui/stat-card';
 import { buildCycleViewModel } from '@/lib/cycle-view-model';
-import { daysBetween } from '@/lib/projection/dates';
-import type { ProjectionOutput } from '@/lib/projection/types';
-
+import { formatMonthDay } from '@/lib/format';
+import { buildOverviewViewModel } from '@/lib/overview-view-model';
+import { daysBetween, weekdayAbbr } from '@/lib/projection/dates';
+import type { ProjectionResponse } from '@/lib/projection-response';
 
 type State =
   | { kind: 'loading' }
   | { kind: 'error' }
-  | { kind: 'ready'; projection: ProjectionOutput };
+  | { kind: 'ready'; projection: ProjectionResponse };
 
-export default function CyclePage() {
+export default function OverviewPage() {
   const [state, setState] = useState<State>({ kind: 'loading' });
 
   const load = useCallback(async () => {
@@ -27,7 +32,7 @@ export default function CyclePage() {
       const today = new Date().toLocaleDateString('en-CA');
       const res = await fetch(`/api/projection?today=${encodeURIComponent(today)}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const projection = (await res.json()) as ProjectionOutput;
+      const projection = (await res.json()) as ProjectionResponse;
       setState({ kind: 'ready', projection });
     } catch {
       setState({ kind: 'error' });
@@ -38,30 +43,44 @@ export default function CyclePage() {
     void load();
   }, [load]);
 
+  // The shell's "Reset" control fires this after reseeding the workspace.
+  useEffect(() => {
+    const onReset = () => void load();
+    window.addEventListener(DEMO_RESET_EVENT, onReset);
+    return () => window.removeEventListener(DEMO_RESET_EVENT, onReset);
+  }, [load]);
+
   return (
-    <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
-      <header className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Runway</h1>
-        <ResetDemoButton onReset={load} />
-      </header>
-      <Body state={state} />
-    </main>
+    <>
+      <PageHeader title="Overview" subtitle="How low will my account get before I'm paid again?" />
+      <MobileTitle title="Overview" />
+      <Body state={state} onRetry={load} />
+    </>
   );
 }
 
-function Body({ state }: { state: State }) {
+function Body({ state, onRetry }: { state: State; onRetry: () => void }) {
   if (state.kind === 'loading') {
     return (
-      <p role="status" className="text-muted-foreground">
-        Loading projection…
-      </p>
+      <Card>
+        <p role="status" className="px-(--card-spacing) text-muted-foreground">
+          Loading projection…
+        </p>
+      </Card>
     );
   }
   if (state.kind === 'error') {
     return (
-      <p role="alert" className="text-destructive">
-        Projection failed. Please try again.
-      </p>
+      <Card>
+        <div className="flex flex-wrap items-center gap-4 px-(--card-spacing)">
+          <p role="alert" className="text-destructive">
+            Projection failed. Please try again.
+          </p>
+          <Button type="button" variant="outline" onClick={onRetry}>
+            Retry
+          </Button>
+        </div>
+      </Card>
     );
   }
 
@@ -69,40 +88,73 @@ function Body({ state }: { state: State }) {
   const balances = projection.balances ?? [];
   if (balances.length === 0) {
     return (
-      <p className="text-muted-foreground">
-        No accounts or entries yet. Use Reset demo to load sample data.
-      </p>
+      <Card>
+        <p className="px-(--card-spacing) text-muted-foreground">
+          No accounts or entries yet. Use Reset in the sidebar to load sample data.
+        </p>
+      </Card>
     );
   }
 
+  const today = balances[0].date;
   const { runway } = projection;
   const warnings = projection.warnings ?? {};
-  const horizonDays = runway
-    ? Math.max(0, daysBetween(balances[0].date, runway.projectionEndDate))
-    : balances.length;
-  const nextPayday = runway?.isBeforePayday ? projection.payCycles?.[1]?.startDate : undefined;
-  const daysUntilPayday = nextPayday ? daysBetween(balances[0].date, nextPayday) : null;
-  const model = buildCycleViewModel(projection, horizonDays);
+  const horizonDays = runway ? Math.max(0, daysBetween(today, runway.projectionEndDate)) : balances.length;
+  const chart = buildCycleViewModel(projection, horizonDays);
+  const vm = buildOverviewViewModel(projection, today);
   const below = warnings.belowThreshold;
+  const thresholdCents = projection.settings?.lowBalanceThresholdCents ?? below?.thresholdCents ?? null;
+  const payday = vm.nextPayday;
 
   return (
-    <div className="space-y-6">
-      <RunwayCallout
-        runway={runway}
-        isEstimated={balances[0]?.isEstimated}
-        horizonDays={horizonDays}
-        daysUntilPayday={daysUntilPayday}
-      />
-      {below && (
-        <LowBalanceWarning
-          lowestBalanceCents={below.lowestBalanceCents}
-          date={below.date}
-          thresholdCents={below.thresholdCents}
+    <div className="grid gap-5 xl:grid-cols-3">
+      <div className="flex min-w-0 flex-col gap-5 xl:col-span-2">
+        <div className="grid grid-cols-2 gap-5 lg:grid-cols-[minmax(0,1fr)_14rem]">
+          <RunwayCallout
+            className="col-span-2 lg:col-span-1 lg:row-span-2"
+            runway={runway}
+            isEstimated={balances[0].isEstimated}
+            horizonDays={horizonDays}
+            daysUntilPayday={vm.daysUntilPayday}
+            belowThreshold={below ?? null}
+          />
+          <StatCard
+            label="Available now"
+            info="What you can spend today: your ledger balance minus pending charges and deposits still on hold."
+            footer={
+              vm.ledgerNowCents !== null && (
+                <>
+                  <Money cents={vm.ledgerNowCents} tone="muted" /> in ledger
+                </>
+              )
+            }
+          >
+            {vm.availableNowCents !== null ? <Money cents={vm.availableNowCents} tone="auto" /> : '—'}
+          </StatCard>
+          <StatCard label="Next payday" footer={payday?.name}>
+            {payday ? (
+              <>
+                <time dateTime={payday.date}>
+                  {weekdayAbbr(payday.date)} {formatMonthDay(payday.date)}
+                </time>
+                <span className="font-normal text-muted-foreground"> · </span>
+                <Money cents={payday.amountCents} showPlus tone="income" className="font-medium" />
+              </>
+            ) : (
+              <span className="text-base font-normal text-muted-foreground">None scheduled</span>
+            )}
+          </StatCard>
+        </div>
+        <BalanceChart
+          series={chart.series}
+          boundaries={chart.boundaries}
+          runway={runway}
+          thresholdCents={thresholdCents}
+          paydayDate={payday?.date ?? null}
         />
-      )}
-      <BalanceChart series={model.series} boundaries={model.boundaries} runway={runway} />
-      <BalanceDifference reason={warnings.availableBalanceDifference?.reason} />
-      <EntryTimeline entries={projection.upcomingEntries ?? []} overdueEntries={warnings.overdueEntries} />
+        <LedgerDifferenceCard items={vm.ledgerDifferenceItems} />
+      </div>
+      <UpcomingCard groups={vm.upcomingGroups} summary={vm.cycleSummary} className="min-w-0 xl:h-full" />
     </div>
   );
 }

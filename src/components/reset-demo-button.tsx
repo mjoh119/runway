@@ -1,18 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+/** Window event fired after a successful reset so any mounted page can refetch. */
+export const DEMO_RESET_EVENT = 'runway:demo-reset';
 
 export interface ResetDemoButtonProps {
-  /** Called after a successful reset so the page can refresh the projection. */
-  onReset: () => void | Promise<void>;
+  /** Optional extra callback after a successful reset. */
+  onReset?: () => void | Promise<void>;
+  className?: string;
 }
 
 /**
- * Reseeds the calling visitor's workspace (Requirement 1.4).
+ * "Demo data · Reset": reseeds the calling visitor's workspace (Requirement 1.4).
  * Today is the visitor's local date, never derived from toISOString.
  */
-export function ResetDemoButton({ onReset }: ResetDemoButtonProps) {
+export function ResetDemoButton({ onReset, className }: ResetDemoButtonProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +29,8 @@ export function ResetDemoButton({ onReset }: ResetDemoButtonProps) {
         method: 'POST',
       });
       if (!res.ok) throw new Error(`Reset failed (${res.status})`);
-      await onReset();
+      window.dispatchEvent(new Event(DEMO_RESET_EVENT));
+      await onReset?.();
     } catch {
       setError('Could not reset the demo. Please try again.');
     } finally {
@@ -34,12 +39,20 @@ export function ResetDemoButton({ onReset }: ResetDemoButtonProps) {
   }
 
   return (
-    <div className="flex flex-col items-start gap-2">
-      <Button type="button" variant="outline" onClick={handleClick} disabled={pending}>
-        {pending ? 'Resetting…' : 'Reset demo'}
-      </Button>
+    <div className={cn('flex flex-col items-start gap-1 text-xs text-muted-foreground', className)}>
+      <p>
+        Demo data ·{' '}
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={pending}
+          className="rounded-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none disabled:opacity-50"
+        >
+          {pending ? 'Resetting…' : 'Reset'}
+        </button>
+      </p>
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-destructive">
           {error}
         </p>
       )}

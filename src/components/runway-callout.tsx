@@ -1,4 +1,9 @@
-import { formatCents, formatMonthDay } from '@/lib/format';
+import { TriangleAlert } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Chip } from '@/components/ui/chip';
+import { Money } from '@/components/ui/money';
+import { formatMonthDay, formatCents } from '@/lib/format';
+import { weekdayAbbr } from '@/lib/projection/dates';
 import type { RunwayResult } from '@/lib/projection/types';
 
 export interface RunwayCalloutProps {
@@ -9,9 +14,12 @@ export interface RunwayCalloutProps {
   horizonDays: number;
   /** Whole days until the next paycheck; set only when the runway is bounded by it. */
   daysUntilPayday?: number | null;
+  /** Set when the low balance warning fired; drives the amber chip. */
+  belowThreshold?: { thresholdCents: number } | null;
+  className?: string;
 }
 
-/** "today", "1 day until payday", or "N days until payday". */
+/** "Payday is today", "1 day until payday", or "N days until payday". */
 export function paydayCountdown(days: number): string {
   if (days <= 0) return 'Payday is today';
   return days === 1 ? '1 day until payday' : `${days} days until payday`;
@@ -22,40 +30,62 @@ export function runwayLabel(isBeforePayday: boolean, horizonDays: number): strin
 }
 
 /** Hero runway number: lowest projected available balance and the date it occurs. */
-export function RunwayCallout({ runway, isEstimated = false, horizonDays, daysUntilPayday = null }: RunwayCalloutProps) {
+export function RunwayCallout({
+  runway,
+  isEstimated = false,
+  horizonDays,
+  daysUntilPayday = null,
+  belowThreshold = null,
+  className,
+}: RunwayCalloutProps) {
   if (!runway) {
     return (
-      <section aria-labelledby="runway-heading" className="space-y-1">
-        <h2 id="runway-heading" className="text-sm font-medium text-muted-foreground">
-          Runway
-        </h2>
-        <p className="text-base text-muted-foreground">No runway available</p>
-      </section>
+      <Card className={className}>
+        <section aria-labelledby="runway-heading" className="px-(--card-spacing)">
+          <h2 id="runway-heading" className="text-base font-semibold">
+            Your runway
+          </h2>
+          <p className="mt-2 text-muted-foreground">No runway available</p>
+        </section>
+      </Card>
     );
   }
 
   const negative = runway.lowestBalanceCents < 0;
-  const amount = formatCents(runway.lowestBalanceCents);
-  const date = formatMonthDay(runway.lowestBalanceDate);
-  const label = runwayLabel(runway.isBeforePayday, horizonDays);
+  const dateLabel = `${weekdayAbbr(runway.lowestBalanceDate)}, ${formatMonthDay(runway.lowestBalanceDate)}`;
+  const tail =
+    daysUntilPayday !== null ? paydayCountdown(daysUntilPayday) : runwayLabel(runway.isBeforePayday, horizonDays);
 
   return (
-    <section aria-labelledby="runway-heading" className="space-y-1">
-      <h2 id="runway-heading" className="text-sm font-medium text-muted-foreground">
-        Runway
-      </h2>
-      <p className="text-4xl font-semibold tabular-nums" data-negative={negative || undefined}>
-        <span className={negative ? 'text-destructive' : 'text-foreground'}>{amount}</span>
-        {isEstimated && (
-          <span className="ml-2 text-base font-normal text-muted-foreground">(estimated)</span>
+    <Card className={className}>
+      <section aria-labelledby="runway-heading" className="flex flex-col px-(--card-spacing)">
+        <h2 id="runway-heading" className="text-base font-semibold">
+          Your runway
+        </h2>
+        <p
+          className="mt-3 text-5xl leading-none font-bold tracking-tight xl:text-6xl"
+          data-negative={negative || undefined}
+        >
+          {/* Primary text color; red only when the balance is negative. */}
+          <Money cents={runway.lowestBalanceCents} tone="auto" />
+          {isEstimated && <span className="ml-2 text-base font-normal text-muted-foreground">(estimated)</span>}
+        </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Lowest on{' '}
+          <time dateTime={runway.lowestBalanceDate} className="font-semibold text-foreground">
+            {dateLabel}
+          </time>{' '}
+          · {tail}
+        </p>
+        {belowThreshold && (
+          <div className="mt-4">
+            <Chip variant="warning" className="px-3 py-1.5 text-sm">
+              <TriangleAlert aria-hidden="true" />
+              <span>Below your {formatCents(belowThreshold.thresholdCents)} threshold.</span>
+            </Chip>
+          </div>
         )}
-      </p>
-      <p className="text-base text-foreground">
-        lowest on <time dateTime={runway.lowestBalanceDate}>{date}</time>, {label}
-      </p>
-      {daysUntilPayday !== null && (
-        <p className="text-sm text-muted-foreground">{paydayCountdown(daysUntilPayday)}</p>
-      )}
-    </section>
+      </section>
+    </Card>
   );
 }

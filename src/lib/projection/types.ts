@@ -70,6 +70,17 @@ export interface PayCycle {
   incomeEntryId: string | null; // the income entry that starts this cycle
 }
 
+/** One item explaining why available differs from ledger (additive output detail). */
+export interface BalanceDifferenceItem {
+  description: string;
+  /** Absolute amount, integer cents. */
+  amountCents: number;
+  /** Pending debit (in available, not yet in ledger) or posted deposit still on hold. */
+  kind: 'Pending' | 'On hold';
+  /** Set for 'On hold' items. */
+  holdReleaseDate?: string; // 'YYYY-MM-DD'
+}
+
 export interface ProjectionOutput {
   balances: ProjectedBalance[];
   runway: RunwayResult | null;
@@ -84,6 +95,8 @@ export interface ProjectionOutput {
     overdueEntries?: Entry[];
     availableBalanceDifference?: {
       reason: string; // e.g., "$500 deposit on hold until Oct 27"
+      /** The individual pending / held items behind `reason` (empty when none is identifiable). */
+      items: BalanceDifferenceItem[];
     };
   };
 }

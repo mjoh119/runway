@@ -5,6 +5,7 @@ import { addDays } from '@/lib/projection/dates'
 import { fetchHolidays } from '@/lib/holidays/fetch'
 import { calendarYearsTouched } from '@/lib/holidays/years'
 import { resolveWorkspace } from '@/lib/workspace'
+import type { ProjectionResponse } from '@/lib/projection-response'
 import type { Account, AccountDataSource } from '@/sources/interface'
 
 export const dynamic = 'force-dynamic'
@@ -119,7 +120,12 @@ export async function GET(request: NextRequest) {
       data: { lastActivity: new Date() },
     })
 
-    const response = NextResponse.json(projection)
+    // Additive echo of workspace settings so the UI can draw the threshold band even when no warning fired.
+    const body: ProjectionResponse = {
+      ...projection,
+      settings: { lowBalanceThresholdCents: workspace.lowBalanceThresholdCents },
+    }
+    const response = NextResponse.json(body)
     if (setCookie) response.headers.append('Set-Cookie', setCookie)
     return response
   } catch (error) {

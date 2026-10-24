@@ -63,7 +63,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
     schedules: [
       {
         id: 'schedule-paycheck',
-        name: 'Paycheck',
+        name: 'Biweekly paycheck',
         accountId: 'demo-checking',
         intervalType: 'WEEKS',
         intervalValue: 2,
@@ -75,14 +75,14 @@ export function generateDemoData(currentDateStr: string): DemoData {
       // Second pay cycle bills: all fall after the next paycheck (offset +13 days),
       // so they never change the runway before payday.
       {
-        id: 'schedule-internet',
-        name: 'Internet',
+        id: 'schedule-streaming',
+        name: 'Streaming',
         accountId: 'demo-checking',
         intervalType: 'DAYS',
         intervalValue: 30,
         daysOfMonth: [],
-        startDate: addDays(currentDateStr, 16),
-        estimatedAmountCents: -6_500,
+        startDate: addDays(currentDateStr, 17),
+        estimatedAmountCents: -1_549, // $15.49
         entryType: 'DEBIT',
       },
       {
@@ -92,19 +92,8 @@ export function generateDemoData(currentDateStr: string): DemoData {
         intervalType: 'DAYS',
         intervalValue: 30,
         daysOfMonth: [],
-        startDate: addDays(currentDateStr, 19),
-        estimatedAmountCents: -11_500,
-        entryType: 'DEBIT',
-      },
-      {
-        id: 'schedule-streaming',
-        name: 'Streaming',
-        accountId: 'demo-checking',
-        intervalType: 'DAYS',
-        intervalValue: 30,
-        daysOfMonth: [],
         startDate: addDays(currentDateStr, 21),
-        estimatedAmountCents: -1_599,
+        estimatedAmountCents: -14_200, // $142.00
         entryType: 'DEBIT',
       },    ],
 
@@ -144,7 +133,7 @@ export function generateDemoData(currentDateStr: string): DemoData {
         actualAmountCents: null,
         status: 'PLANNED',
         entryType: 'DEBIT',
-        description: 'Electric bill',
+        description: 'Electric',
       },
       {
         id: 'entry-weekend',

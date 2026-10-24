@@ -30,14 +30,14 @@ describe('Demo data projection', () => {
     expect(weekend.postDate).toBe('2026-03-14');
     expect(weekend.shiftedPostDate).toBe('2026-03-16');
 
-    // Second-cycle bills (after the 03-24 paycheck): $65 + $115 + $15.99 out.
-    expect(at('2026-03-27').availableBalanceCents).toBe(253_000 - 6_500);
-    expect(at('2026-03-30').availableBalanceCents).toBe(253_000 - 6_500 - 11_500);
-    expect(at('2026-04-01').availableBalanceCents).toBe(253_000 - 6_500 - 11_500 - 1_599);
+    // Second-cycle bills (after the 03-24 paycheck): Streaming $15.49 (+17 days = Sat 03-28,
+    // shifted to Mon 03-30) and Car insurance $142.00 (+21 days = Wed 04-01).
+    expect(at('2026-03-27').availableBalanceCents).toBe(253_000);
+    expect(at('2026-03-30').availableBalanceCents).toBe(253_000 - 1_549);
+    expect(at('2026-04-01').availableBalanceCents).toBe(253_000 - 1_549 - 14_200);
     expect(
       projection.upcomingEntries.filter((e) => e.scheduleId !== null && e.scheduleId !== 'schedule-paycheck').map((e) => e.description),
-    ).toEqual(['Internet', 'Car insurance', 'Streaming']);
-
+    ).toEqual(['Streaming', 'Car insurance']);
     expect(projection.warnings.overdueEntries!.map((e) => e.id)).toEqual(['entry-phone-overdue']);
     expect(projection.warnings.availableBalanceDifference!.reason).toBe(
       '$60 pending debit and $40 deposit on hold until Mar 12',
