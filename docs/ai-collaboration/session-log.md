@@ -308,6 +308,13 @@ M docs/ai-collaboration/session-log.md
 
 ---
 
+## Prompt (backfilled)
+**Timestamp:** between Stop 04:21:51.690Z (previous turn ended) and first task execution in tasks.meta.json, 04:22:27.314Z (derived order; exact time not recorded, the prompt hook did not fire)
+
+Run all tasks for this spec.
+
+---
+
 ## Agent finished
 **Timestamp:** 2026-10-24T04:56:10.744Z
 
@@ -362,10 +369,37 @@ M __tests__/db/properties/p02-reset-isolation.test.ts
 
 ---
 
+## Prompt (backfilled)
+**Timestamp:** between Stop 04:56:10.744Z (run-all-tasks turn ended) and commit 2f13c4b, 04:56:46Z (derived order; exact time not recorded, the prompt hook did not fire)
+
+commit and push to main
+
+---
+
 ## Agent finished
 **Timestamp:** 2026-10-24T04:57:02.090Z
 
 (no changes — working tree clean)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 04:57:02.090Z and commit ce828fc (the prisma generate fix), 04:58:27Z (derived order; exact time not recorded, the prompt hook did not fire)
+
+✓ Compiled successfully in 8.6s
+   Linting and checking validity of types ...
+Failed to compile.
+./src/lib/entry-service/idempotency.ts:44:29
+Type error: Property 'submissionKey' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+  42 |   const where = { workspaceId_key: { workspaceId, key } }
+  43 |
+> 44 |   const seen = await prisma.submissionKey.findUnique({ where })
+     |                             ^
+  45 |   if (seen?.result != null) return seen.result as T
+  46 |
+  47 |   try {
+Next.js build worker exited with code: 1 and signal: null
+Error: [BUILD_UTILS_SPAWN_1] Command "npm run build" exited with 1
 
 ---
 
@@ -378,12 +412,30 @@ M docs/ai-collaboration/session-log.md
 
 ---
 
+## Prompt (backfilled)
+**Timestamp:** between Stop 04:58:38.780Z and Stop 05:00:51.500Z (end of its turn) (derived order; exact time not recorded, the prompt hook did not fire)
+
+/favicon.ico:1  Failed to load resource: the server responded with a status of 404 ()
+
+/api/projection?today=2026-10-23:1  Failed to load resource: the server responded with a status of 500 ()
+
+---
+
 ## Agent finished
 **Timestamp:** 2026-10-24T05:00:51.500Z
 
 ```text
 M docs/ai-collaboration/session-log.md
 ```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:00:51.500Z and Stop 05:11:55.298Z (15 UI files modified) (derived order; exact time not recorded, the prompt hook did not fire)
+
+Please update the UI for the Overview, Envelope, Log, and Settings screens to better fill the white space, elements should be sized more appropriate for visibility and optimized for a professional look. Make sure differing sections of the pages utilize clearly separated panels, don't waste horizontal or vertical white space and utilize the UI kit attached.
+
+[image attached: Runway UI Kit (color tokens, type scale, spacing and radius, app shell, buttons, alert chips, status badges, card examples, envelope card states, grouped list, chart, side sheet)]
 
 ---
 
@@ -410,10 +462,62 @@ M docs/ai-collaboration/session-log.md
 
 ---
 
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:11:55.298Z and commit fd3b351, 05:12:14Z (derived order; exact time not recorded, the prompt hook did not fire)
+
+commit and push to main
+
+---
+
 ## Agent finished
 **Timestamp:** 2026-10-24T05:12:27.086Z
 
 (no changes — working tree clean)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:12:27.086Z and Stop 05:27:27.876Z (30 files modified) (derived order; exact time not recorded, the prompt hook did not fire)
+
+Apply the attached redesign (also at docs/design/mockups/06-dark-redesign.png) across the app. It shows four screens in a dark theme: Overview (top left), Envelopes (top right), Log activity sheet over the Overview (bottom left), and Settings (bottom right). This is a visual update. Don't change engine logic, and don't build features that don't exist yet.
+
+THEME
+
+- Make this dark theme the default. Define it as shadcn CSS-variable tokens in globals.css (background, card, muted, border, primary, ring, success, warning, danger, chart-available, chart-ledger, chart-threshold). Keep the existing light tokens under a .light class so we can add a toggle later; no toggle now.
+
+- Make the page background clearly darker than the cards, and give cards a 1px border so panels read as separate surfaces, as in the image.
+
+- Body and muted text must meet WCAG AA contrast (4.5:1) on both page and card backgrounds. Lighten muted text if the image's gray is too dim.
+
+SHARED COMPONENTS (build or update these, then use them everywhere)
+
+- PageHeader: title, subtitle, and "Today is <date>" on the right, identical on every page.
+
+- SectionCard: header row with title and optional action, then body.
+
+- StatCard, StatusBadge (Pending, Overdue, On hold, Moved from…), AmountCell (debit, income in green, negative in red), and GroupedList with date-group headers.
+
+- Sidebar: Overview, Envelopes, Log, Settings, with a clear active state, and "Demo data · Reset" at the bottom. Rename "Activity" to "Log". Keep the mobile bottom tab bar using the same tokens.
+
+SCREENS
+
+- Overview: match the layout in the image (runway card, Available now and Next payday stats, chart, "Why available isn't the same as ledger" card, Upcoming list with the "This cycle" summary).
+
+- Chart: available is a solid step line. Ledger is a lighter dashed step line drawn on top, so it stays visible where the two overlap. The below-threshold band is a low-opacity tint (about 15%), not a solid red bar. Keep the Today and Payday reference lines, the runway dot and label, and readable axis ticks on the dark background.
+
+- Envelopes and Log sheet: if these screens exist from Spec 2, restyle them to match the image, including category icons on envelope cards, red styling for over-budget, and the "Runway impact" preview in the sheet. If they don't exist yet, leave them alone.
+
+- Settings: the low-balance threshold is entered in dollars, stored as integer cents, and empty means no warning. Projection horizon is a whole number of days, 1–365. Validate both and show inline errors. Add Schedules and Accounts cards that say "not available yet."
+
+RULES
+
+- Use the image for visual direction only. Every number, date and name must come from real data, not the image.
+
+- No hard-coded colors, sizes or shadows in components; use tokens only. Money uses tabular-nums.
+
+- npm test and npm run build must pass. Then list what you changed and anything in the image you couldn't match.
+
+[image attached: dark redesign mockup with four screens]
 
 ---
 
@@ -451,6 +555,291 @@ M docs/ai-collaboration/session-log.md
 ?? src/components/ui/section-card.tsx
 ?? src/components/ui/status-badge.tsx
 ?? src/lib/runway-impact.ts
+```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:27:27.876Z and commit 6c5d08e, 05:27:40Z (derived order; exact time not recorded, the prompt hook did not fire)
+
+commit and push to main
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T05:27:52.904Z
+
+(no changes — working tree clean)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:27:52.904Z and Stop 05:37:37.706Z (end of its turn) (derived order; exact time not recorded, the prompt hook did not fire)
+
+were my log-hooks actually working?
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T05:37:37.706Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** between Stop 05:37:37.706Z and Stop 05:39:18.014Z (end of its turn) (derived order; exact time not recorded, the prompt hook did not fire)
+
+Can't you add the prompts from this session?
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T05:39:18.014Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Spec 2: Plan vs. actual & envelopes.  Read the steering files and Spec 1 first. Goal: the user can record what actually happened against the plan, see how it differs from the estimate, and track flexible spending in envelopes — with runway recomputing immediately after every change.  IN SCOPE - Post an actual against a planned entry (amount + date); entry becomes POSTED. Skip an entry (excluded from projection). Add a one-off entry (debit or income). - Variance: per entry (actual − estimate) and cumulative for the current pay cycle, shown on the cycle view. - Envelopes: a flexible category with a budget and a reset period chosen by the user (each pay cycle, weekly, or monthly). Line items (purchases) are assigned to an envelope; the envelope shows budget / spent / left. - Settings: low-balance threshold and projection horizon, editable. - UI: an Envelopes screen and a fast "Log" flow (post actual / add purchase / add one-off), both consistent with the cycle view's design.  OUT OF SCOPE: transfers, schedule/account editing, Plaid.  KEY RULES - Manual/demo mode balance update: when an actual is posted or a purchase logged, the service updates the primary account's ledger and available balances (available unchanged if a hold applies), because there is no bank feed. The projection then excludes the posted entry, as Spec 1 requires. Add a test proving runway does NOT jump when a planned bill is posted at its estimated amount. - Envelope commitment: the unspent remainder (budget − spent, floored at 0) is treated as a debit at the start of the envelope's current period, or today if the period has already started. Overspend (spent > budget) reduces runway by the overage and is shown clearly. - Pay-cycle envelopes reset on scheduled income only; a one-off income entry does not reset envelopes.  EDGE CASES THE REQUIREMENTS MUST COVER - Actual differs from estimate (higher and lower); posting an overdue entry clears its overdue flag. - A purchase dated in a previous envelope period counts toward that period, not the current one. - Editing or deleting a line item recalculates the envelope and runway. - Money input: "12.5" → 1250 cents; reject more than two decimals, empty, or non-numeric input; integer cents end to end. - Double-submit protection: the same post or purchase is never recorded twice. - Everything is scoped by workspaceId, and "Reset demo" restores the original state. - All Spec 1 tests keep passing.  Write requirements as user stories with EARS acceptance criteria that are testable as written. Stop after requirements for my review.
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Build a Feature
+
+(Answer to the "new feature or bugfix?" question.)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Requirements
+
+(Answer to the "What do you want to start with?" question.)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+No — change 5.3. A one-off entry dated today or in the past records something that already happened:
+
+- The Add one-off form has a "This already happened" option, checked by default when the date is today or earlier.
+
+- When checked, the entry is saved as POSTED with actual = entered amount, and (manual/demo mode) the primary account's ledger and available balances are updated immediately, same rule as posting an actual. It never shows as overdue.
+
+- When unchecked, the entry is PLANNED and its date must be today or later; reject a planned one-off with a past date ("Planned entries need a date today or later").
+
+- Future-dated one-offs are always PLANNED.
+
+Overdue applies only to planned entries whose date passes without being posted or skipped.
+
+Add tests: past-dated one-off → posted, balances updated, not overdue; planned one-off with a past date → rejected.
+
+After that its approved and you can move to the design
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Create the requirements and then the design and then the tasks for plan-vs-actual-envelopes
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Look at C:\Users\Micah\Documents\runway\docs\ai-collaboration\session-log.md. Can you backfill the prompts from this chat?
+
+---
+## Agent finished
+**Timestamp:** 2026-10-24T05:40:53.782Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Run all tasks for this spec.
+
+(Spec: projection-engine-cycle-view.)
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Can you commit and push to Github, and then walk me through the steps to deploy this to vercel for free.
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+merge to main please. which of these do we need?
+
+[screenshot attached: Neon "create project" form with Postgres database, Object storage, Functions, AI gateway, Realtime and Better Auth toggles]
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+I have a vercel pro account. should I add prisma postgres?
+
+[screenshot attached: Vercel "New Project" page with the optional Prisma Postgres integration]
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+how do I generate the long random string for cron_secret
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+(No text.)
+
+[screenshot attached: the deployed Overview page on runway-ivory-chi.vercel.app]
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+How is this a demo though? It's just showing preset amounts, should users be able to enter data and budget using the app?
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Can you fix these:
+
+The layout is pushed right. Everything sits in the right half with the left half empty, which is the first thing a reviewer will notice. Center the container (mx-auto).
+The balance line is smoothed, which misrepresents when money moves. The curve starts falling on Oct 25, before any bill lands, and rises before payday. Balances jump on specific days, so use a step line (Recharts type="stepAfter"). A banking reviewer will notice.
+The ledger line is barely visible. I can only see it at the very start. It should run separately from available wherever they differ, for example after the pending charge posts. Check whether it's hidden behind the available line or not plotted past the first few days.
+The demo labels leak into the item names. Names like "Phone Bill (overdue)", "Grocery Store (pending)" and "Weekend Debit (shifts to next business day)" repeat what the badges already say. Use realistic names (Phone bill, Grocery store, Gym membership) and let the UI do the labeling.
+The shift reason is generic. "Weekend or bank holiday" should name the actual reason: "moved from Sat Oct 24" or "moved from Mon Jan 19, MLK Day." The data already exists to do this.
+The next pay cycle is empty. Nothing happens between Nov 5 and Nov 18, so the second cycle is a flat line. Add a couple of recurring bills there so it looks like a real month.
+Small polish: round y-axis ticks ($0, $500, $1,000...), and add "11 days until payday" under the runway number.
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Commit and push straight to main
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+Restyle the app to match the attached mockups (also saved in docs/design/mockups/). This is a visual overhaul of existing functionality — no spec needed, and no changes to projection engine logic.
+
+SCOPE NOW
+
+- 01-overview.png → the Overview (cycle view), desktop.
+
+- 04-overview-mobile.png → the same page below the md breakpoint (bottom tab bar replaces the sidebar).
+
+- App shell from the mockups: left sidebar (Overview active; Envelopes, Activity, Settings as simple "Coming soon" placeholder pages) and "Demo data · Reset" at the bottom.
+
+- 02-envelopes.png and 03-log-sheet.png are for Spec 2 — do NOT build them now, but design the tokens and components so they can reuse them.
+
+RULES
+
+- Images are visual direction only. All numbers, dates, and names come from the real projection data, never from the images.
+
+- Tailwind + shadcn/ui. Put colors, radius, spacing, and font settings in theme tokens (CSS variables / tailwind config), not hard-coded in components. Use tabular numerals for money.
+
+- Runway amount renders in the primary text color; the amber "Below your $X threshold" chip is the only warning color. Red only for negative balances and the Overdue chip. Income amounts in muted green.
+
+CHART (Recharts)
+
+- Available balance: solid step line (type="stepAfter"). Ledger: lighter dashed step line drawn on top so it stays visible where they overlap.
+
+- Shaded band below the threshold, red dot + label at the runway low point, dashed "Today" and "Payday" reference lines, rounded y-axis ticks, range = current + next pay cycle.
+
+- Keep a text summary of the chart for screen readers.
+
+VIEW-MODEL ADDITIONS (small, tested)
+
+- daysUntilPayday; cycle summary for the current cycle (cycle dates, planned out, planned in, overdue count).
+
+- Upcoming list grouped: "Overdue" first, then "Today · <date>", then one group per date.
+
+- Shift chip text names the original weekday and date, e.g. "Moved from Sat Oct 24" (and the holiday name if it was a holiday).
+
+- "Why available isn't the same as ledger" card lists each item (amount, description, Pending / On hold). Remove any duplicate explanation elsewhere.
+
+DEMO DATA TOUCH-UPS
+
+- Realistic names with no status words in them: Phone bill, Grocery store, Rent, Electric, Gym membership, Biweekly paycheck, Streaming, Car insurance. Status comes from chips, not names.
+
+- Add Streaming (~$15.49) and Car insurance (~$142.00) in the next pay cycle so it isn't flat.
+
+- Confirm demo seeding uses the browser-supplied date, not the server's clock.
+
+DONE WHEN
+
+- Overview matches 01 at 1440px and 04 at 390px, with real data.
+
+- npm test and npm run build pass; all existing tests unchanged or updated with reason.
+
+- Then list what you changed and anything in the mockups you could not match.
+
+[images attached: 01-overview (desktop Overview), 02-envelopes, 03-log-sheet (Log activity side sheet over the Overview), 04-overview-mobile]
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** unknown (reconstructed from the chat transcript on 2026-10-24; the prompt hook did not fire)
+
+commit and push to main
+
+---
+## Agent finished
+**Timestamp:** 2026-10-24T05:42:28.376Z
+
+```text
+M docs/ai-collaboration/session-log.md
+```
+
+---
+
+## Prompt (backfilled)
+**Timestamp:** after Stop 2026-10-24T05:42:28.376Z (derived order; this turn was still running when written, so no upper bound)
+
+Can you use some logic to try and derive the order of the backfilled prompts and organize them using that derivation?
+
+---
+
+## Agent finished
+**Timestamp:** 2026-10-24T05:46:23.361Z
+
+```text
+M docs/ai-collaboration/session-log.md
 ```
 
 ---
