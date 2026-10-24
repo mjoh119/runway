@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Log Prompt Submit",
+      "trigger": "UserPromptSubmit",
+      "description": "Appends a timestamped \"Prompt\" entry with the user's full prompt text to docs/ai-collaboration/session-log.md",
+      "action": {
+        "type": "command",
+        "command": "node docs/ai-collaboration/log-hook.mjs prompt"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1669 @@
+{
+  "pbtResults": {
+    "2.8 Write property test for business day definition": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810518965
+    },
+    "2.9 Write property test for business day shift identity": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810521221
+    },
+    "2.11 Write property test for income backward shifting": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810521562
+    },
+    "2.10 Write property test for debit forward shifting": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810524614
+    },
+    "2.12 Write property test that both dates are preserved": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810531341
+    },
+    "2.13 Write property test for Sunday holiday observance": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810573984
+    },
+    "2.14 Write property test for Saturday holiday not observed on Friday": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810581118
+    },
+    "3.3 Write property test for entry generation bounds": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810690304
+    },
+    "3.4 Write property test for month-end clamping": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810698381
+    },
+    "3.5 Write property test for generated entry defaults": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810699789
+    },
+    "4.17 Write property test for runway before income": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810746142
+    },
+    "4.18 Write property test for runway tie-breaking": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810746537
+    },
+    "3.6 Write property test for invalid interval rejection": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810747565
+    },
+    "4.19 Write property test for runway within horizon": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810749199
+    },
+    "4.23 Write property test for negative runway warning": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810789591
+    },
+    "4.25 Write property test for overdue entry flagging": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810790781
+    },
+    "4.24 Write property test for no warning without a trigger": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810791793
+    },
+    "4.22 Write property test for threshold warning": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810792302
+    },
+    "7.11 Write property test for threshold storage bounds": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810801181
+    },
+    "3.9 Write property test for pay cycle boundaries": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810910225
+    },
+    "3.10 Write property test for horizon-based projection end": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810974435
+    },
+    "3.11 Write property test that mid-cycle income splits a cycle": {
+      "status": "passed",
+      "lastRunTimestamp": 1792810996540
+    },
+    "4.8 Write property test for debits decreasing both balances": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811058023
+    },
+    "4.9 Write property test for simple deposits": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811058761
+    },
+    "4.7 Write property test that posted entries are not double-applied": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811071904
+    },
+    "4.6 Write property test for daily balance rows": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811104645
+    },
+    "4.10 Write property test for held deposit split": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811158476
+    },
+    "4.11 Write property test for estimated hold labeling": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811159226
+    },
+    "4.14 Write property test for overdue entry application": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811162333
+    },
+    "4.13 Write property test for estimated balance labeling": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811162826
+    },
+    "4.12 Write property test for available balance estimation": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811169550
+    },
+    "4.27 Write property test for upcoming entries ordering": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811228381
+    },
+    "4.20 Write property test for runway on the primary account": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811232866
+    },
+    "6.4 Write property test for FakeSource determinism": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811341434
+    },
+    "6.5 Write property test for demo data relative dates": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811392049
+    },
+    "6.7 Write property test for integer-cent money": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811392964
+    },
+    "6.6 Write property test for projection purity": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811401343
+    },
+    "7.10 Write property test for null available balance preservation": {
+      "status": "passed",
+      "lastRunTimestamp": 1792811533303
+    }
+  },
+  "executionHistory": {
+    "1.1 Scaffold Next.js, Tailwind, shadcn/ui, Prisma and the folder layout": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022459
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810029956
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810213761
+      }
+    ],
+    "1.2 Configure Vitest and fast-check": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022560
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810217155
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810258406
+      }
+    ],
+    "2.1 Implement `src/lib/projection/dates.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022623
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810217189
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810259201
+      }
+    ],
+    "2.2 Implement domain types in `src/lib/projection/types.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022672
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810217793
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810257851
+      }
+    ],
+    "2.3 Implement `src/lib/format.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022737
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810218185
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810259684
+      }
+    ],
+    "2.4 Implement `src/lib/projection/shift.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022776
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810262561
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810423166
+      }
+    ],
+    "2.5 Implement `src/lib/holidays/generator.ts` and `src/lib/holidays/years.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022818
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810262736
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810423942
+      }
+    ],
+    "2.6 Write unit tests for date helpers and formatting": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022857
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810263534
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810422344
+      }
+    ],
+    "2.7 Write unit tests for holiday generation, observance and years": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022896
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810430056
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810490994
+      }
+    ],
+    "2.8 Write property test for business day definition": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022936
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810495079
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810540300
+      }
+    ],
+    "2.9 Write property test for business day shift identity": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810022971
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810495158
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810540421
+      }
+    ],
+    "2.10 Write property test for debit forward shifting": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023019
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810495963
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810540974
+      }
+    ],
+    "2.11 Write property test for income backward shifting": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023058
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810496757
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810541770
+      }
+    ],
+    "2.12 Write property test that both dates are preserved": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023101
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810497258
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810542227
+      }
+    ],
+    "2.13 Write property test for Sunday holiday observance": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023141
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810550773
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810586745
+      }
+    ],
+    "2.14 Write property test for Saturday holiday not observed on Friday": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023179
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810550820
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810587215
+      }
+    ],
+    "3.1 Implement entry generation in `src/lib/projection/engine.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023219
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810428152
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810491607
+      }
+    ],
+    "3.2 Write unit tests for month-end clamping": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023255
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810660104
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810712257
+      }
+    ],
+    "3.3 Write property test for entry generation bounds": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023294
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810660154
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810710484
+      }
+    ],
+    "3.4 Write property test for month-end clamping": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023340
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810660630
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810711027
+      }
+    ],
+    "3.5 Write property test for generated entry defaults": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023379
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810661006
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810710400
+      }
+    ],
+    "3.6 Write property test for invalid interval rejection": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023421
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810715723
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810755823
+      }
+    ],
+    "3.7 Implement pay-cycle boundaries in `src/lib/projection/cycle.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023457
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810591288
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810654882
+      }
+    ],
+    "3.8 Write unit test for the three-paycheck month": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023496
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810856816
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810937109
+      }
+    ],
+    "3.9 Write property test for pay cycle boundaries": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023530
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810857493
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810939981
+      }
+    ],
+    "3.10 Write property test for horizon-based projection end": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023569
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810943228
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811004403
+      }
+    ],
+    "3.11 Write property test that mid-cycle income splits a cycle": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023636
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810943636
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811005202
+      }
+    ],
+    "4.1 Implement balance projection and available-balance estimation in `engine.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023702
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810591317
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810653340
+      }
+    ],
+    "4.2 Write unit test for pending debit posting (ledger only)": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023746
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810944428
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811005748
+      }
+    ],
+    "4.3 Write unit tests for held deposit release": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023786
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810944928
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811006313
+      }
+    ],
+    "4.4 Write unit test for null available balance estimation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023822
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810945494
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811006858
+      }
+    ],
+    "4.5 Write unit test for overdue planned entries": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023861
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811009830
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811110557
+      }
+    ],
+    "4.6 Write property test for daily balance rows": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023902
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811010380
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811111002
+      }
+    ],
+    "4.7 Write property test that posted entries are not double-applied": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023938
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811011176
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811111780
+      }
+    ],
+    "4.8 Write property test for debits decreasing both balances": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810023978
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811011683
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811112580
+      }
+    ],
+    "4.9 Write property test for simple deposits": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024018
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811012175
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811112983
+      }
+    ],
+    "4.10 Write property test for held deposit split": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024056
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811115687
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811178677
+      }
+    ],
+    "4.11 Write property test for estimated hold labeling": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024093
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811116182
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811179395
+      }
+    ],
+    "4.12 Write property test for available balance estimation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024135
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811116961
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811180195
+      }
+    ],
+    "4.13 Write property test for estimated balance labeling": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024171
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811117515
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811181425
+      }
+    ],
+    "4.14 Write property test for overdue entry application": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024208
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811118092
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811181475
+      }
+    ],
+    "4.15 Implement runway in `src/lib/projection/runway.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024245
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810428122
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810490472
+      }
+    ],
+    "4.16 Write unit test for runway tie-breaking": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024288
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810715800
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810757147
+      }
+    ],
+    "4.17 Write property test for runway before income": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024327
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810716583
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810756320
+      }
+    ],
+    "4.18 Write property test for runway tie-breaking": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024368
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810717140
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810755102
+      }
+    ],
+    "4.19 Write property test for runway within horizon": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024404
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810717781
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810757547
+      }
+    ],
+    "4.20 Write property test for runway on the primary account": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024440
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811184417
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811272240
+      }
+    ],
+    "4.21 Implement warnings in `src/lib/projection/warnings.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024488
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810428749
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810489674
+      }
+    ],
+    "4.22 Write property test for threshold warning": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024560
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810762353
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810812222
+      }
+    ],
+    "4.23 Write property test for negative runway warning": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024603
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810762381
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810811715
+      }
+    ],
+    "4.24 Write property test for no warning without a trigger": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024640
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810762817
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810813029
+      }
+    ],
+    "4.25 Write property test for overdue entry flagging": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024684
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810763625
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810813475
+      }
+    ],
+    "4.26 Implement the `projectCashFlow` orchestrator in `engine.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024720
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810855185
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810936964
+      }
+    ],
+    "4.27 Write property test for upcoming entries ordering": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024768
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811184976
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811272149
+      }
+    ],
+    "5. Checkpoint - Ensure the engine tests pass": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024808
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811745652
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811765760
+      }
+    ],
+    "6.1 Implement `src/sources/interface.ts`, `src/sources/fake-source.ts` and the test helper": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024851
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811185691
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811272198
+      }
+    ],
+    "6.2 Write the exact-value demo projection test for 2026-03-11": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024887
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811274999
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811349829
+      }
+    ],
+    "6.3 Write the full-year demo guarantees test": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024928
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811275809
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811350546
+      }
+    ],
+    "6.4 Write property test for FakeSource determinism": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810024973
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811276608
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811351358
+      }
+    ],
+    "6.5 Write property test for demo data relative dates": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025012
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811355628
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811409183
+      }
+    ],
+    "6.6 Write property test for projection purity": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025054
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811355666
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811409228
+      }
+    ],
+    "6.7 Write property test for integer-cent money": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025091
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811356198
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811409842
+      }
+    ],
+    "7.1 Create the Prisma schema, migration and client singleton": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025135
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810264085
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810424405
+      }
+    ],
+    "7.2 Implement `src/lib/workspace-settings.ts` validation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025173
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810264637
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810421793
+      }
+    ],
+    "7.3 Implement workspace seeding": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025211
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811277078
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811351696
+      }
+    ],
+    "7.4 Implement `src/lib/workspace.ts` workspace resolution": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025254
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811359249
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811410291
+      }
+    ],
+    "7.5 Implement Reset demo for one workspace": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025296
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811464959
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811548126
+      }
+    ],
+    "7.6 Write integration tests for workspace resolution": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025337
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811465648
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811548546
+      }
+    ],
+    "7.7 Write property test for workspace data isolation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025374
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811552525
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811615076
+      }
+    ],
+    "7.8 Write property test for reset isolation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025418
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811617940
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811670235
+      }
+    ],
+    "7.9 Write property test for exactly one primary account": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025470
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811466443
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811549097
+      }
+    ],
+    "7.10 Write property test for null available balance preservation": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025539
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811466959
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811549713
+      }
+    ],
+    "7.11 Write property test for threshold storage bounds": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025579
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810764030
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810810994
+      }
+    ],
+    "8.1 Implement `src/lib/holidays/fetch.ts`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025620
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810429553
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810488947
+      }
+    ],
+    "8.2 Write tests for holiday fetch caching and fallback": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025658
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810821448
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810848555
+      }
+    ],
+    "8.3 Implement `GET /api/projection`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025701
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811465031
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811548076
+      }
+    ],
+    "8.4 Implement the cleanup cron route and `vercel.json`": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025739
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810591784
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810655369
+      }
+    ],
+    "9. Checkpoint - Ensure backend tests pass": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025778
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811768880
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811786051
+      }
+    ],
+    "10.1 Implement the cycle view model helper": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025822
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810592571
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810653295
+      }
+    ],
+    "10.2 Write unit tests for the view model helper": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025857
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810856261
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810939915
+      }
+    ],
+    "10.3 Implement runway callout, low-balance warning and balance-difference line": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025894
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810593126
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810654067
+      }
+    ],
+    "10.4 Implement the balance chart": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025935
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810855459
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810937612
+      }
+    ],
+    "10.5 Implement the entry timeline": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810025974
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810656017
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810711830
+      }
+    ],
+    "10.6 Implement the Reset demo button": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810026018
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811618462
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811669737
+      }
+    ],
+    "10.7 Implement the cycle view page and layout": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810026055
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811674373
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811742723
+      }
+    ],
+    "11. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810026093
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811791939
+      },
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811834573
+      }
+    ],
+    "1. Scaffold the project and test tooling": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810258438
+      }
+    ],
+    "2. Build the pure engine foundations": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792810587246
+      }
+    ],
+    "3. Implement entry generation and pay cycles": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811005240
+      }
+    ],
+    "6. Build FakeSource and demo data": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811409881
+      }
+    ],
+    "8. Implement holiday fetch, projection API and cleanup cron": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811548161
+      }
+    ],
+    "7. Implement persistence, workspaces and reset": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811670275
+      }
+    ],
+    "10. Build the cycle view UI": [
+      {
+        "executionId": "85d53524-9ed2-41d7-9c87-f8cc505e7992",
+        "chatSessionId": "sess_a61421e2-8fde-4c8f-b33a-df5680471850",
+        "timestamp": 1792811742776
+      }
+    ]
+  }
+}

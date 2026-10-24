@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Log Agent Stop",
+      "trigger": "Stop",
+      "description": "Appends a timestamped \"Agent finished\" entry with git status --short output to docs/ai-collaboration/session-log.md",
+      "action": {
+        "type": "command",
+        "command": "node docs/ai-collaboration/log-hook.mjs stop"
+      }
+    }
+  ]
+}

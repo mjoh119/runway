@@ -1,0 +1,128 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  lastActivity DateTime @default(now())
+
+  // User preferences scoped to this workspace
+  lowBalanceThresholdCents Int?
+  projectionHorizonDays    Int  @default(30)
+
+  accounts      Account[]
+  schedules     Schedule[]
+  oneOffEntries OneOffEntry[]
+
+  @@index([lastActivity]) // for cleanup of inactive workspaces
+}
+
+model Account {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  name      String // "Chase Checking", "Savings"
+  type      AccountType
+  isPrimary Boolean     @default(false)
+
+  // Current balances from source (integer cents)
+  ledgerBalanceCents    Int
+  availableBalanceCents Int? // null when institution doesn't report it
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  schedules     Schedule[]
+  oneOffEntries OneOffEntry[]
+
+  @@unique([workspaceId, name])
+  @@index([workspaceId, isPrimary])
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  INVESTMENT
+  CREDIT_CARD
+}
+
+model Schedule {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  name      String // "Rent", "Paycheck"
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  intervalType  IntervalType
+  intervalValue Int // N in "every N days/weeks/months"
+  daysOfMonth   Int[] // for DAYS_OF_MONTH type: [1, 15] for 1st and 15th
+
+  startDate            DateTime @db.Date // first occurrence (date only, no time)
+  estimatedAmountCents Int // positive for income, negative for debits
+
+  entryType EntryType // INCOME or DEBIT
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId, accountId])
+}
+
+enum IntervalType {
+  DAYS // every N days
+  WEEKS // every N weeks
+  MONTHS // every N months
+  DAYS_OF_MONTH // specific days: 1st, 15th, etc.
+}
+
+enum EntryType {
+  INCOME
+  DEBIT
+}
+
+model OneOffEntry {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  postDate DateTime @db.Date // original scheduled date (date only)
+
+  estimatedAmountCents Int // always present
+  actualAmountCents    Int? // null until posted
+
+  status    EntryStatus @default(PLANNED)
+  entryType EntryType
+
+  // Deposit hold modeling
+  holdReleaseDate DateTime? @db.Date // when deposit becomes available (date only)
+  isHoldEstimated Boolean   @default(false) // true if we estimated the hold date
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId, accountId, postDate])
+  @@index([workspaceId, status])
+}
+
+enum EntryStatus {
+  PLANNED // scheduled, not yet seen
+  PENDING // seen by source but not posted
+  POSTED // settled
+  SKIPPED // user excluded
+}
